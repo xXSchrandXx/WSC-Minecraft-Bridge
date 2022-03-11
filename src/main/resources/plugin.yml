@@ -1,0 +1,12 @@
+name: ${project.artifactId}-bukkit
+main: ${project.groupId}.bukkit.MinecraftLinkerBukkit
+version: ${project.version}
+author: xXSchrandXx
+description: WSC-Minecraft-Linker
+api-version: 1.13
+load: STARTUP
+softdepend: [LuckPerms, SkinsRestorer]
+
+commands:
+  wsclinker:
+    description: Command for WSC-Minecraft-Linker.

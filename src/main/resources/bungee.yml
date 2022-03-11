@@ -1,0 +1,10 @@
+name: ${project.artifactId}-bungee
+main: ${project.groupId}.bungee.MinecraftLinkerBungee
+version: ${project.version}
+author: xXSchrandXx
+description: WSC-Minecraft-Linker
+softdepend: [LuckPerms, SkinsRestorer]
+
+commands:
+  wsclinker:
+    description: Command for WSC-Minecraft-Linker.
