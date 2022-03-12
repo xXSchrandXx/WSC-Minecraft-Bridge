@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 
-import de.xxschrandxx.wsc.bungee.handler.*;
+import de.xxschrandxx.wsc.bungee.api.MinecraftLinkerEvent;
+import de.xxschrandxx.wsc.bungee.command.WSCLinker;
+import de.xxschrandxx.wsc.bungee.listener.HandlerListener;
 import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
 import de.xxschrandxx.wsc.core.MinecraftLinkerVars;
-
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -28,25 +31,19 @@ public class MinecraftLinkerBungee extends Plugin {
         return this.handler;
     }
 
-
-    public void onEnable() {
-        // setting instance
-        instance = this;
-
-        if (!reloadConfig()) {
-            getLogger().log(Level.SEVERE, "Could not load config.yml, disabeling plugin!");
-            onDisable();
-            return;
-        }
-       
+    public boolean setHandler(CommandSender sender) {
         InetSocketAddress addr;
         try {
             addr = new InetSocketAddress(getConfig().getString(MinecraftLinkerVars.Configuration.server.hostname), getConfig().getInt(MinecraftLinkerVars.Configuration.server.port));
         }
         catch (IllegalArgumentException | SecurityException e) {
-            getLogger().log(Level.SEVERE, "Could not set address.", e);
-            onDisable();
-            return;
+            if (sender == null) {
+                getLogger().log(Level.SEVERE, "Could not set address.", e);
+            }
+            else {
+                sender.sendMessage(new TextComponent("Could not set address. \n" + e.getMessage()));
+            }
+            return false;
         }
 
         try {
@@ -59,16 +56,31 @@ public class MinecraftLinkerBungee extends Plugin {
             );
         }
         catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Could not create Webserver!");
-            onDisable();
-            return;
+            if (sender == null) {
+                getLogger().log(Level.SEVERE, "Could not create Webserver!");
+            }
+            else {
+                sender.sendMessage(new TextComponent("Could not create Webserver!"));
+            }
+            return false;
         }
+        if (sender == null) {
+            getLogger().log(Level.INFO, "WebServer: Created instance.");
+        }
+        else {
+            sender.sendMessage(new TextComponent("WebServer: Created instance."));
+        }
+        instance.getProxy().getPluginManager().callEvent(new MinecraftLinkerEvent());
+        if (sender == null) {
+            getLogger().log(Level.INFO, "Called registration event.");
+        }
+        else {
+            sender.sendMessage(new TextComponent("Called registration event."));
+        }
+    return true;
+    }
 
-        // TODO add modules
-        getHandler().addHandler("/version/", new VersionHandler());
-        getHandler().addPasswordHandler("/command/", new CommandHandler());
-
-        // TODO wait until every plugin has started.
+    public void startHandler(CommandSender sender) {
         if (getConfig().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)) {
             if (
                 getInstance().handler.startHttps(
@@ -79,20 +91,68 @@ public class MinecraftLinkerBungee extends Plugin {
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyPassword)
                 )
             ) {
-                getLogger().log(Level.INFO, "WebServer started with ssl.");
+                if (sender == null) {
+                    getLogger().log(Level.INFO, "WebServer started with ssl.");
+                }
+                else {
+                    sender.sendMessage(new TextComponent("WebServer started with ssl."));
+                }
                 return;
             }
-            getLogger().log(Level.WARNING, "WebServer could not start with ssl. Starting without it.");
+            if (sender == null) {
+                getLogger().log(Level.WARNING, "WebServer could not start with ssl. Starting without it.");
+            }
+            else {
+                sender.sendMessage(new TextComponent("WebServer could not start with ssl. Starting without it."));
+            }
         }
         getInstance().handler.startHttp();
-        getLogger().log(Level.INFO, "WebServer started.");
+        if (sender == null) {
+            getLogger().log(Level.INFO, "WebServer started.");
+        }
+        else {
+            sender.sendMessage(new TextComponent("WebServer started."));
+        }
+    }
+
+    public void stopHandler(CommandSender sender) {
+        if (getHandler() != null) {
+            getHandler().stop();
+            if (sender == null) {
+                getLogger().log(Level.INFO, "WebServer stopped.");
+            }
+            else {
+                sender.sendMessage(new TextComponent("Webserver stopped"));
+            }
+        }
+    }
+
+    public void onEnable() {
+        // setting instance
+        instance = this;
+
+        if (!reloadConfig()) {
+            getLogger().log(Level.SEVERE, "Could not load config.yml, disabeling plugin!");
+            onDisable();
+            return;
+        }
+
+        if (!setHandler(null)) {
+            return;
+        }
+
+        getProxy().getPluginManager().registerListener(getInstance(), new HandlerListener());
+        getProxy().getPluginManager().registerCommand(getInstance(), new WSCLinker());
+
+        // TODO add Event
+        getProxy().getPluginManager().callEvent(new MinecraftLinkerEvent());
+
+        // TODO wait until every plugin has started.
+        startHandler(null);
     }
 
     public void onDisable() {
-        if (getHandler() != null) {
-            getHandler().stop();
-            getLogger().log(Level.INFO, "WebServer stopped.");
-        }
+        stopHandler(null);
     }
 
     // start config part
