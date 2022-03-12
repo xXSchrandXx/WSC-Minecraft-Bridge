@@ -6,5 +6,5 @@ description: WSC-Minecraft-Linker
 softdepend: [LuckPerms, SkinsRestorer]
 
 commands:
-  wsclinker:
+  wsclinkerbungee:
     description: Command for WSC-Minecraft-Linker.
