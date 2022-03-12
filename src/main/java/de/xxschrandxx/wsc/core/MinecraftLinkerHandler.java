@@ -142,6 +142,7 @@ public class MinecraftLinkerHandler {
      * @param keyPassword the password for the key
      * @return weather https server could be started
      */
+    // Following method is licensed under the same license: GNU Lesser General Public License v3
     public boolean startHttps(String keyStorePath, char[] storePassword, File dataFolder, String alias, char[] keyPassword) {
         try {
             if (!Paths.get(keyStorePath).isAbsolute()) {
@@ -207,6 +208,7 @@ public class MinecraftLinkerHandler {
 
         return startSuccessful;
     }
+    // End of GNU Lesser General Public License v3 licensed method
 
     /**
      * Stops the webserver.
