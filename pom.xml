@@ -39,7 +39,7 @@
 			<artifactId>bungeecord-api</artifactId>
 			<version>1.16-R0.4</version>
 		</dependency>
-		<!-- httpserer -->
+		<!-- httpserver -->
 		<dependency>
 			<groupId>com.sun.net.httpserver</groupId>
 			<artifactId>http</artifactId>
