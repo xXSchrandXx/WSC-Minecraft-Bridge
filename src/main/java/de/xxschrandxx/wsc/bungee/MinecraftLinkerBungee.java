@@ -83,7 +83,11 @@ public class MinecraftLinkerBungee extends Plugin {
     public void startHandler(CommandSender sender) {
         if (getConfig().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)) {
             if (
-                getInstance().handler.startHttps(
+                getInstance().handler.start(
+                    getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
+                    getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
+                    getConfig().getInt(MinecraftLinkerVars.Configuration.server.maxTries),
+                    getConfig().getLong(MinecraftLinkerVars.Configuration.server.resetTime),
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath),
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword),
                     getDataFolder(),
@@ -106,7 +110,17 @@ public class MinecraftLinkerBungee extends Plugin {
                 sender.sendMessage(new TextComponent("WebServer could not start with ssl. Starting without it."));
             }
         }
-        getInstance().handler.startHttp();
+        getInstance().handler.start(
+            getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
+            getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
+            getConfig().getInt(MinecraftLinkerVars.Configuration.server.maxTries),
+            getConfig().getLong(MinecraftLinkerVars.Configuration.server.resetTime),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
         if (sender == null) {
             getLogger().log(Level.INFO, "WebServer started.");
         }
@@ -201,6 +215,18 @@ public class MinecraftLinkerBungee extends Plugin {
             error = true;
         // password
         if (checkConfig(MinecraftLinkerVars.Configuration.server.password, MinecraftLinkerVars.Configuration.server.defaults.password))
+            error = true;
+        // whitelistPath
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.whitelistPath, MinecraftLinkerVars.Configuration.server.defaults.whitelistPath))
+            error = true;
+        // blacklistPath
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.blacklistPath, MinecraftLinkerVars.Configuration.server.defaults.blacklistPath))
+            error = true;
+        // maxTries
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.maxTries, MinecraftLinkerVars.Configuration.server.defaults.maxTries))
+            error = true;
+        // resetTime
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.resetTime, MinecraftLinkerVars.Configuration.server.defaults.resetTime))
             error = true;
         // enabled
         if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.enabled, MinecraftLinkerVars.Configuration.server.ssl.defaults.enabled))

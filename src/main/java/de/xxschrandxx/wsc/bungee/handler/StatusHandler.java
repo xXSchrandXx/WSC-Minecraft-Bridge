@@ -20,8 +20,8 @@ public class StatusHandler extends AbstractHttpHandler {
             response.put("version", MinecraftLinkerBungee.getInstance().getDescription().getVersion());
             response.put("applicationAuthor", MinecraftLinkerBungee.getInstance().getDescription().getAuthor());
             response.put("applicationDescription", MinecraftLinkerBungee.getInstance().getDescription().getDescription());
-            response.put("serverName", MinecraftLinkerBungee.getInstance().getProxy().getName());
-            response.put("serverVersion", MinecraftLinkerBungee.getInstance().getProxy().getVersion());
+            response.put("platformName", MinecraftLinkerBungee.getInstance().getProxy().getName());
+            response.put("platformVersion", MinecraftLinkerBungee.getInstance().getProxy().getVersion());
         }
         else {
             response.put("status", "Method Not Allowed.");

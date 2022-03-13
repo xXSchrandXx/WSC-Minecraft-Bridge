@@ -4,9 +4,14 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.BindException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.security.KeyManagementException;
@@ -16,6 +21,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,11 +32,20 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManagerFactory;
 
+import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsServer;
+import com.sun.net.httpserver.Authenticator.Failure;
+import com.sun.net.httpserver.Authenticator.Result;
+import com.sun.net.httpserver.Authenticator.Success;
+
+import de.xxschrandxx.wsc.core.authenticator.Floodgate;
+import de.xxschrandxx.wsc.core.authenticator.PasswordAuthenticator;
+
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 
@@ -38,7 +54,23 @@ public class MinecraftLinkerHandler {
     private final Logger logger;
 
     private HttpServer httpServer;
-    private BasicAuthenticator auth;
+
+    private File dataFolder;
+
+    private String whitelistPath;
+    public ArrayList<InetAddress> whitelist;
+
+    private String blacklistPath;
+    public ArrayList<InetAddress> blacklist;
+
+    public Integer maxTries;
+    public HashMap<InetAddress, Integer> tries = new HashMap<InetAddress, Integer>();
+
+    public Long resetTime;
+    public HashMap<InetAddress, Long> times = new HashMap<InetAddress, Long>(); 
+
+    private Authenticator authenticator;
+    private BasicAuthenticator passwordAuthenticator;
 
     /**
      * Creates the handler.
@@ -56,17 +88,9 @@ public class MinecraftLinkerHandler {
             this.httpServer = HttpsServer.create(address, 0);
         else
             this.httpServer = HttpServer.create(address, 0);
-        this.auth = new BasicAuthenticator("wsclinker") {
-            @Override
-            public boolean checkCredentials(String username, String passwd) {
-                if (user.equals(username) && passwd.equals(password)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        };
+
+        this.authenticator = new Floodgate(this);
+        this.passwordAuthenticator = new PasswordAuthenticator(this, user, password);
     }
 
     /**
@@ -76,7 +100,9 @@ public class MinecraftLinkerHandler {
      * @return @see HttpServer#createContext(String, HttpHandler)
      */
     public HttpContext addHandler(String path, HttpHandler handler) {
-        return httpServer.createContext(path, handler);
+        HttpContext context = httpServer.createContext(path, handler);
+        context.setAuthenticator(this.authenticator);
+        return context;
     }
 
     /**
@@ -88,7 +114,7 @@ public class MinecraftLinkerHandler {
      */
     public HttpContext addPasswordHandler(String path, HttpHandler handler) {
         HttpContext context = this.addHandler(path, handler);
-        context.setAuthenticator(this.auth);
+        context.setAuthenticator(this.passwordAuthenticator);
         return context;
     }
 
@@ -96,7 +122,25 @@ public class MinecraftLinkerHandler {
      * Starts the webserver.
      * @return weather https server could be started
      */
-    public boolean startHttp() {
+    public boolean start(String whitelistPath, String blacklistPath, Integer maxTries, Long resetTime, String keyStorePath, String storePassword, File dataFolder, String alias, String keyPassword) {
+
+        this.whitelistPath = whitelistPath;
+        this.blacklistPath = blacklistPath;
+        this.maxTries = maxTries;
+        this.resetTime = resetTime;
+        this.dataFolder = dataFolder;
+
+        loadLists();
+
+        if (keyStorePath == null || storePassword == null || alias == null || keyPassword == null) {
+            return this.startHttp();
+        }
+        else {
+            return this.startHttps(keyStorePath, storePassword, alias, keyPassword);
+        }
+    }
+
+    private boolean startHttp() {
         try {
             this.httpServer.start();
         }
@@ -107,10 +151,10 @@ public class MinecraftLinkerHandler {
     }
 
     /**
-     * @see #startHttps(String, char[], File, String, char[])
+     * @see #startHttps(String, char[], String, char[])
      */
-    public boolean startHttps(String keyStorePath, String storePassword, File dataFolder, String alias, String keyPassword) {
-        return startHttps(keyStorePath, storePassword.toCharArray(), dataFolder, alias, keyPassword.toCharArray());
+    private boolean startHttps(String keyStorePath, String storePassword, String alias, String keyPassword) {
+        return startHttps(keyStorePath, storePassword.toCharArray(), alias, keyPassword.toCharArray());
     }
 
     /**
@@ -137,16 +181,15 @@ public class MinecraftLinkerHandler {
      *
      * @param keyStorePath path to key storage
      * @param storePassword password for key storage
-     * @param dataFolder datafolder for relative paths
      * @param alias the alias of the key
      * @param keyPassword the password for the key
      * @return weather https server could be started
      */
     // Following method is licensed under the same license: GNU Lesser General Public License v3
-    public boolean startHttps(String keyStorePath, char[] storePassword, File dataFolder, String alias, char[] keyPassword) {
+    private boolean startHttps(String keyStorePath, char[] storePassword, String alias, char[] keyPassword) {
         try {
             if (!Paths.get(keyStorePath).isAbsolute()) {
-                keyStorePath = dataFolder + File.separator + keyStorePath;
+                keyStorePath = this.dataFolder + File.separator + keyStorePath;
             }
         } catch (InvalidPathException e) {
             logger.log(Level.SEVERE, "WebServer: Could not find Keystore: ",  e);
@@ -214,7 +257,146 @@ public class MinecraftLinkerHandler {
      * Stops the webserver.
      */
     public void stop() {
+        this.saveLists();
         this.httpServer.stop(0);
     }
 
+    public void loadLists() {
+        // load whitelist
+        this.whitelist = new ArrayList<InetAddress>();
+        try {
+            if (!Paths.get(this.whitelistPath).isAbsolute()) {
+                this.whitelistPath = this.dataFolder + File.separator + this.whitelistPath;
+            }
+            try (FileInputStream stream = new FileInputStream(this.whitelistPath)) {
+                byte[] bytes = stream.readAllBytes();
+                String file = new String(bytes);
+                for (String rawAddress : file.split("\n: ,")) {
+                    String address = rawAddress.strip();
+                    if (!address.isEmpty()) {
+                        try {
+                            this.whitelist.add(InetAddress.getByName(address));
+                        }
+                        catch(UnknownHostException | SecurityException e) {
+                            logger.log(Level.WARNING, "WebServer: Could not add " + address + " to whitelist.", e);
+                        }
+                    }
+                }
+            }
+            catch(IOException | SecurityException e) {
+                logger.log(Level.WARNING, "WebServer: Could open " + this.whitelistPath, e);
+            }
+        }
+        catch (InvalidPathException e) {
+            logger.log(Level.SEVERE, "WebServer: Could not find whitelist: ",  e);
+        }
+
+        // load blacklist
+        this.blacklist = new ArrayList<InetAddress>();
+        try {
+            if (!Paths.get(this.blacklistPath).isAbsolute()) {
+                this.blacklistPath = this.dataFolder + File.separator + this.blacklistPath;
+            }
+            try (FileInputStream stream = new FileInputStream(this.blacklistPath)) {
+                byte[] bytes = stream.readAllBytes();
+                String file = new String(bytes);
+                for (String rawAddress : file.split("\n: ,")) {
+                    String address = rawAddress.strip();
+                    if (!address.isEmpty()) {
+                        try {
+                            this.blacklist.add(InetAddress.getByName(address));
+                        }
+                        catch(UnknownHostException | SecurityException e) {
+                            logger.log(Level.WARNING, "WebServer: Could not add " + address + " to blacklist.", e);
+                        }
+                    }
+                }
+            }
+            catch(IOException | SecurityException e) {
+                logger.log(Level.WARNING, "WebServer: Could open " + this.blacklistPath, e);
+            }
+        }
+        catch (InvalidPathException e) {
+            logger.log(Level.SEVERE, "WebServer: Could not find blacklist: ",  e);
+        }
+    }
+
+    public void saveLists() {
+        // save whitelist
+        if (this.whitelist != null) {
+            if (!this.whitelist.isEmpty()) {
+                try (FileOutputStream stream = new FileOutputStream(this.whitelistPath)) {
+                    for (InetAddress address : this.whitelist) {
+                        stream.write(address.getHostName().getBytes(Charset.defaultCharset()));
+                    }
+                }
+                catch(IOException | SecurityException e) {
+                    logger.log(Level.WARNING, "WebServer: Could not write into " + this.whitelistPath, e);
+                }
+            }
+            else {
+                logger.log(Level.WARNING, "WebServer: Initialised whitelist is empty.");
+            }
+        }
+        else {
+            logger.log(Level.WARNING, "WebServer: Whitelist not initialised.");
+        }
+
+        // save blacklist
+        if (this.blacklist != null) {
+            if (!this.blacklist.isEmpty()) {
+                try (FileOutputStream stream = new FileOutputStream(this.blacklistPath)) {
+                    for (InetAddress address : this.blacklist) {
+                        stream.write(address.getHostName().getBytes(Charset.defaultCharset()));
+                    }
+                }
+                catch(IOException | SecurityException e) {
+                    logger.log(Level.WARNING, "WebServer: Could not write into " + this.blacklistPath, e);
+                }
+            }
+            else {
+                logger.log(Level.WARNING, "WebServer: Initialised blacklist is empty.");
+            }
+        }
+        else {
+            logger.log(Level.WARNING, "WebServer: Blacklist not initialised.");
+        }
+    }
+
+    public Result authenticate(HttpExchange exch) {
+        InetAddress address = exch.getRemoteAddress().getAddress();
+        if (this.blacklist.contains(address)) {
+            return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
+        }
+        if (this.whitelist.contains(address)) {
+            return new Success(exch.getPrincipal());
+        }
+
+        if (this.tries.containsKey(address)) {
+            if (this.tries.get(address) >= this.maxTries) {
+                if (this.times.get(address) >= this.resetTime) {
+                    this.tries.put(address, 1);
+                    this.times.put(address, System.currentTimeMillis());
+                }
+                else {
+                    this.blacklist.add(address);
+                    return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
+                }
+            }
+            else {
+                if (this.times.get(address) >= this.resetTime) {
+                    this.tries.put(address, 1);
+                    this.times.put(address, System.currentTimeMillis());
+                }
+                else {
+                    this.tries.put(address, this.tries.get(address) + 1);
+                }
+            }
+        }
+        else {
+            this.tries.put(address, 1);
+            this.times.put(address, System.currentTimeMillis());
+        }
+        return new Success(exch.getPrincipal());
+    }
 }

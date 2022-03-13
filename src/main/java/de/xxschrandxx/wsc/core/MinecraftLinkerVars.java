@@ -11,11 +11,23 @@ public final class MinecraftLinkerVars {
             public final static String user = "server.user";
             /** password for webserver */
             public final static String password = "server.password";
+            /** path to whitelist */
+            public final static String whitelistPath = "server.whitelistPath";
+            /** path for blacklist */
+            public final static String blacklistPath = "server.blacklistPath";
+            /** maximum of tries until blacklisted */
+            public final static String maxTries = "server.maxTries";
+            /** time until maxTries reset for address */
+            public final static String resetTime = "server.resetTime";
             public final static class defaults {
                 public final static String hostname = "localhost";
                 public final static Integer port = 8080;
                 public final static String user = "user";
                 public final static String password = "MySuperSecretPassword";
+                public final static String whitelistPath = "whitelist.txt";
+                public final static String blacklistPath = "blacklist.txt";
+                public final static Integer maxTries = 600;
+                public final static Long resetTime = 600000L;
             }
             public final static class ssl {
                 /** weather ssl should be enabled */
