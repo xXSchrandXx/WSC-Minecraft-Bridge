@@ -59,7 +59,7 @@ public class MinecraftLinkerHandler {
         this.auth = new BasicAuthenticator("wsclinker") {
             @Override
             public boolean checkCredentials(String username, String passwd) {
-                if (user.equals(username) && passwd.equals(passwd)) {
+                if (user.equals(username) && passwd.equals(password)) {
                     return true;
                 }
                 else {
