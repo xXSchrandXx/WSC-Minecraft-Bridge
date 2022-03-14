@@ -11,6 +11,7 @@ import de.xxschrandxx.wsc.bungee.listener.HandlerListener;
 import de.xxschrandxx.wsc.core.IMinecraftLinker;
 import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
 import de.xxschrandxx.wsc.core.MinecraftLinkerVars;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -166,7 +167,6 @@ public class MinecraftLinkerBungee extends Plugin implements IMinecraftLinker<Co
         getProxy().getPluginManager().registerListener(getInstance(), new HandlerListener());
         getProxy().getPluginManager().registerCommand(getInstance(), new WSCLinker());
 
-        // TODO add Event
         getProxy().getPluginManager().callEvent(new MinecraftLinkerEvent());
 
         // TODO wait until every plugin has started.

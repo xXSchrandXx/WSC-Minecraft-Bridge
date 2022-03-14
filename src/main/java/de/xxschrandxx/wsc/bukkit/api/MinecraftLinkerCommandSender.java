@@ -1,8 +1,6 @@
 package de.xxschrandxx.wsc.bukkit.api;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,6 +10,8 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+
+import de.xxschrandxx.wsc.bukkit.MinecraftLinkerBukkit;
 
 public class MinecraftLinkerCommandSender implements CommandSender {
 
@@ -25,12 +25,9 @@ public class MinecraftLinkerCommandSender implements CommandSender {
         this.ip = ip;
     }
 
+    @Override
     public String getName() {
         return "MinecraftLinker";
-    }
-
-    public boolean hasPermission(String permission) {
-        return true;
     }
 
     protected final StringBuffer buffer = new StringBuffer();
@@ -41,154 +38,107 @@ public class MinecraftLinkerCommandSender implements CommandSender {
         return result;
     }
 
+    @Override
     public void sendMessage(String message) {
         buffer.append(message).append("\n");
     }
 
-    public boolean dispatchCommand(String commandline) {
-        return getServer().getPluginManager().dispatchCommand(this, commandline);
-    }
 
     @Override
-    public boolean sendMessages(String... messages) {
-        for (String line : messages) {
-            sendMessage(line);
+    public void sendMessage(String[] messages) {
+        for (String message : messages) {
+            sendMessage(message);
         }
     }
 
     @Override
-    public void sendMessage(BaseComponent... message) {
-        for (BaseComponent line : message) {
-            sendMessage(line);
+    public void sendMessage(UUID sender, String message) {
+        sendMessage(sender.toString() + ": " + message);
+    }
+
+    @Override
+    public void sendMessage(UUID sender, String[] messages) {
+        for (String message : messages) {
+            sendMessage(sender, message);
         }
-    }
-
-    @Override
-    public void sendMessage(BaseComponent message) {
-        sendMessage(message.toLegacyText());
-    }
-
-    @Override
-    public Collection<String> getGroups() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void addGroups(String... groups) {
-    }
-
-    @Override
-    public void removeGroups(String... groups) {
-    }
-
-    @Override
-    public void setPermission(String permission, boolean value) {
-    }
-
-    @Override
-    public Collection<String> getPermissions() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin arg0) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2, int arg3) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean hasPermission(Permission arg0) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isPermissionSet(String arg0) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isPermissionSet(Permission arg0) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void recalculatePermissions() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void removeAttachment(PermissionAttachment arg0) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public boolean isOp() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void setOp(boolean arg0) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public Server getServer() {
-        // TODO Auto-generated method stub
-        return null;
+        return MinecraftLinkerBukkit.getInstance().getServer();
+    }
+
+    public boolean dispatchCommand(String commandline) {
+        return getServer().dispatchCommand(this, commandline);
     }
 
     @Override
-    public void sendMessage(String[] arg0) {
-        // TODO Auto-generated method stub
-        
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void sendMessage(UUID arg0, String arg1) {
-        // TODO Auto-generated method stub
-        
+    public PermissionAttachment addAttachment(Plugin plugin) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void sendMessage(UUID arg0, String[] arg1) {
-        // TODO Auto-generated method stub
-        
+    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void removeAttachment(PermissionAttachment attachment) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void recalculatePermissions() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isOp() {
+        return true;
+    }
+
+    @Override
+    public void setOp(boolean value) {
+        throw new UnsupportedOperationException("OP status cannot be changed for Rcon.");
+    }
+
+    @Override
+    public boolean isPermissionSet(String name) {
+        return true;
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission perm) {
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(String perm) {
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(Permission perm) {
+        return true;
     }
 
     @Override
     public Spigot spigot() {
-        // TODO Auto-generated method stub
-        return null;
-    }    
+        return new MinecraftLinkerCommandSenderSpigot(this);
+    }
 }
