@@ -86,8 +86,8 @@ public class MinecraftLinkerBungee extends Plugin {
                 getInstance().handler.start(
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-                    getConfig().getInt(MinecraftLinkerVars.Configuration.server.maxTries),
-                    getConfig().getLong(MinecraftLinkerVars.Configuration.server.resetTime),
+                    getConfig().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
+                    getConfig().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath),
                     getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword),
                     getDataFolder(),
@@ -113,8 +113,8 @@ public class MinecraftLinkerBungee extends Plugin {
         getInstance().handler.start(
             getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
             getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-            getConfig().getInt(MinecraftLinkerVars.Configuration.server.maxTries),
-            getConfig().getLong(MinecraftLinkerVars.Configuration.server.resetTime),
+            getConfig().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
+            getConfig().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
             null,
             null,
             null,
@@ -223,10 +223,10 @@ public class MinecraftLinkerBungee extends Plugin {
         if (checkConfig(MinecraftLinkerVars.Configuration.server.blacklistPath, MinecraftLinkerVars.Configuration.server.defaults.blacklistPath))
             error = true;
         // maxTries
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.maxTries, MinecraftLinkerVars.Configuration.server.defaults.maxTries))
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.maxTries, MinecraftLinkerVars.Configuration.server.floodgate.defaults.maxTries))
             error = true;
         // resetTime
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.resetTime, MinecraftLinkerVars.Configuration.server.defaults.resetTime))
+        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.resetTime, MinecraftLinkerVars.Configuration.server.floodgate.defaults.resetTime))
             error = true;
         // enabled
         if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.enabled, MinecraftLinkerVars.Configuration.server.ssl.defaults.enabled))
@@ -242,12 +242,6 @@ public class MinecraftLinkerBungee extends Plugin {
             error = true;
         // keyPassword
         if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.keyPassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyPassword))
-            error = true;
-        // maxAttempts
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.maxAttempts, MinecraftLinkerVars.Configuration.server.floodgate.defaults.maxAttempts))
-            error = true;
-        // resetTime
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.resetTime, MinecraftLinkerVars.Configuration.server.floodgate.defaults.resetTime))
             error = true;
 
         // end config data

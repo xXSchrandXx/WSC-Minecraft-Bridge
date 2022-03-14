@@ -2,7 +2,6 @@ package de.xxschrandxx.wsc.bungee.api;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +14,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import de.xxschrandxx.wsc.bungee.MinecraftLinkerBungee;
 
-public class AbstractHttpHandler implements HttpHandler {
+public abstract class AbstractHttpHandler implements HttpHandler {
 
     protected final Gson gson = new Gson();
 
@@ -43,16 +42,13 @@ public class AbstractHttpHandler implements HttpHandler {
     }
 
     /**
-     * Runs after the 
+     * Runs while handeled by {@link #handle(HttpExchange)}.
+     * @see {@link de.xxschrandxx.wsc.bungee.handler.StatusHandler#run(HttpExchange)}
+     * @see {@link de.xxschrandxx.wsc.bukkit.handler.StatusHandler#run(HttpExchange)}
      * @param exchange the exchange containing the request from the client
      * @return a {@link HashMap} containing the response for the client.
      *         Contained keys should be in <a href="https://en.wikipedia.org/wiki/Camel_case">Camel case</a>
      *         The response must have the key 'status' as {@link String} and 'statusCode' as {@link Integer} set.
      */
-    public HashMap<String, Object> run(HttpExchange exchange) {
-        HashMap<String, Object> response = new HashMap<String, Object>();
-        response.put("Status", "OK");
-        response.put("Status-Code", HttpURLConnection.HTTP_OK);
-        return response;
-    }
+    public abstract HashMap<String, Object> run(HttpExchange exchange);
 }

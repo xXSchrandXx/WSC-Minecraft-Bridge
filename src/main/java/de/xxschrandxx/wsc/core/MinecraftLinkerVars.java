@@ -15,10 +15,6 @@ public final class MinecraftLinkerVars {
             public final static String whitelistPath = "server.whitelistPath";
             /** path for blacklist */
             public final static String blacklistPath = "server.blacklistPath";
-            /** maximum of tries until blacklisted */
-            public final static String maxTries = "server.maxTries";
-            /** time until maxTries reset for address */
-            public final static String resetTime = "server.resetTime";
             public final static class defaults {
                 public final static String hostname = "localhost";
                 public final static Integer port = 8080;
@@ -26,8 +22,6 @@ public final class MinecraftLinkerVars {
                 public final static String password = "MySuperSecretPassword";
                 public final static String whitelistPath = "whitelist.txt";
                 public final static String blacklistPath = "blacklist.txt";
-                public final static Integer maxTries = 600;
-                public final static Long resetTime = 600000L;
             }
             public final static class ssl {
                 /** weather ssl should be enabled */
@@ -50,12 +44,12 @@ public final class MinecraftLinkerVars {
             }
             public final static class floodgate {
                 /** max attempts until an ip gets bocked */
-                public final static String maxAttempts = "server.floodgate.maxAttempts";
+                public final static String maxTries = "server.floodgate.maxTries";
                 /** time in milliseconds after the floodgate resets */
                 public final static String resetTime = "server.floodgate.resetTime";
                 public final static class defaults {
-                    public final static Integer maxAttempts = 600;
-                    public final static Integer resetTime = 600000; 
+                    public final static Integer maxTries = 600;
+                    public final static Long resetTime = 600000L; 
                 }
             }
         }

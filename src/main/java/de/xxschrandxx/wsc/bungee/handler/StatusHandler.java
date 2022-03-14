@@ -9,7 +9,6 @@ import de.xxschrandxx.wsc.bungee.MinecraftLinkerBungee;
 import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
 
 public class StatusHandler extends AbstractHttpHandler {
-
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -29,5 +28,4 @@ public class StatusHandler extends AbstractHttpHandler {
         }
         return response;
     }
-
 }

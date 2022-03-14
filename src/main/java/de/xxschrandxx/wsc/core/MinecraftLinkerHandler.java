@@ -22,6 +22,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,6 +62,7 @@ public class MinecraftLinkerHandler {
     public ArrayList<InetAddress> whitelist;
 
     private String blacklistPath;
+    private boolean blacklistEnabled;
     public ArrayList<InetAddress> blacklist;
 
     public Integer maxTries;
@@ -95,6 +97,7 @@ public class MinecraftLinkerHandler {
 
     /**
      * Adds a {@link HttpServer#createContext(String, HttpHandler)} with given path.
+     * Automativally sets the {@link Floodgate}
      * @param path url path to listen on.
      * @param handler handler to add.
      * @return @see HttpServer#createContext(String, HttpHandler)
@@ -106,8 +109,8 @@ public class MinecraftLinkerHandler {
     }
 
     /**
-     * Adds a {@link HttpHandler} with given path.
-     * Automativally sets the {@link BasicAuthenticator}
+     * Adds a {@link HttpServer#createContext(String, HttpHandler)} with given path.
+     * Automativally sets the {@link PasswordAuthenticator}
      * @param path url path to listen on.
      * @param handler handler to add.
      * @return @see HttpServer#createContext(String, HttpHandler)
@@ -263,7 +266,7 @@ public class MinecraftLinkerHandler {
 
     public void loadLists() {
         // load whitelist
-        this.whitelist = new ArrayList<InetAddress>();
+        this.whitelist = null;
         try {
             if (!Paths.get(this.whitelistPath).isAbsolute()) {
                 this.whitelistPath = this.dataFolder + File.separator + this.whitelistPath;
@@ -271,7 +274,8 @@ public class MinecraftLinkerHandler {
             try (FileInputStream stream = new FileInputStream(this.whitelistPath)) {
                 byte[] bytes = stream.readAllBytes();
                 String file = new String(bytes);
-                for (String rawAddress : file.split("\n: ,")) {
+                this.whitelist = new ArrayList<InetAddress>();
+                for (String rawAddress : file.split("\n:,: ,")) {
                     String address = rawAddress.strip();
                     if (!address.isEmpty()) {
                         try {
@@ -283,6 +287,9 @@ public class MinecraftLinkerHandler {
                     }
                 }
             }
+            catch (FileNotFoundException e) {
+                logger.log(Level.INFO, "WebServer: No whitelist set.");
+            }
             catch(IOException | SecurityException e) {
                 logger.log(Level.WARNING, "WebServer: Could open " + this.whitelistPath, e);
             }
@@ -293,6 +300,7 @@ public class MinecraftLinkerHandler {
 
         // load blacklist
         this.blacklist = new ArrayList<InetAddress>();
+        this.blacklistEnabled = false;
         try {
             if (!Paths.get(this.blacklistPath).isAbsolute()) {
                 this.blacklistPath = this.dataFolder + File.separator + this.blacklistPath;
@@ -300,7 +308,8 @@ public class MinecraftLinkerHandler {
             try (FileInputStream stream = new FileInputStream(this.blacklistPath)) {
                 byte[] bytes = stream.readAllBytes();
                 String file = new String(bytes);
-                for (String rawAddress : file.split("\n: ,")) {
+                this.blacklistEnabled = true;
+                for (String rawAddress : file.split("\n:,: ,")) {
                     String address = rawAddress.strip();
                     if (!address.isEmpty()) {
                         try {
@@ -311,6 +320,9 @@ public class MinecraftLinkerHandler {
                         }
                     }
                 }
+            }
+            catch (FileNotFoundException e) {
+                logger.log(Level.INFO, "WebServer: No blacklist set.");
             }
             catch(IOException | SecurityException e) {
                 logger.log(Level.WARNING, "WebServer: Could open " + this.blacklistPath, e);
@@ -343,7 +355,7 @@ public class MinecraftLinkerHandler {
         }
 
         // save blacklist
-        if (this.blacklist != null) {
+        if (this.blacklistEnabled) {
             if (!this.blacklist.isEmpty()) {
                 try (FileOutputStream stream = new FileOutputStream(this.blacklistPath)) {
                     for (InetAddress address : this.blacklist) {
@@ -365,37 +377,41 @@ public class MinecraftLinkerHandler {
 
     public Result authenticate(HttpExchange exch) {
         InetAddress address = exch.getRemoteAddress().getAddress();
+
+        if (this.whitelist != null) {
+            if (this.whitelist.contains(address)) {
+                return new Success(exch.getPrincipal());
+            }
+        }
+
         if (this.blacklist.contains(address)) {
             return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
         }
-        if (this.whitelist.contains(address)) {
+
+        if (this.maxTries <= -1) {
             return new Success(exch.getPrincipal());
         }
 
-        if (this.tries.containsKey(address)) {
-            if (this.tries.get(address) >= this.maxTries) {
-                if (this.times.get(address) >= this.resetTime) {
-                    this.tries.put(address, 1);
-                    this.times.put(address, System.currentTimeMillis());
-                }
-                else {
-                    this.blacklist.add(address);
-                    return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
-                }
+        Date currentTime = new Date();
+        if (this.tries.containsKey(address) && this.times.containsKey(address)) {
+            Date resetTime = new Date(this.times.get(address) + this.resetTime);
+
+            if (resetTime.before(currentTime)) {
+                this.tries.put(address, 1);
+                this.times.put(address, currentTime.getTime());
+            }
+            else if (this.maxTries <= this.tries.get(address)) {
+                logger.log(Level.INFO, "WebServer: Adding " + address.toString() + " to blacklist.");
+                this.blacklist.add(address);
+                return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
             }
             else {
-                if (this.times.get(address) >= this.resetTime) {
-                    this.tries.put(address, 1);
-                    this.times.put(address, System.currentTimeMillis());
-                }
-                else {
-                    this.tries.put(address, this.tries.get(address) + 1);
-                }
+                this.tries.put(address, (this.tries.get(address) + 1));
             }
         }
         else {
             this.tries.put(address, 1);
-            this.times.put(address, System.currentTimeMillis());
+            this.times.put(address, currentTime.getTime());
         }
         return new Success(exch.getPrincipal());
     }

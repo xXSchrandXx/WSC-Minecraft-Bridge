@@ -12,7 +12,6 @@ import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
 import de.xxschrandxx.wsc.bungee.api.MinecraftLinkerCommandSender;
 
 public class CommandHandler extends AbstractHttpHandler {
-
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -25,6 +24,11 @@ public class CommandHandler extends AbstractHttpHandler {
             byte[] requestBytes = exchange.getRequestBody().readAllBytes();
             String requestString = new String(requestBytes, StandardCharsets.UTF_8);
             HashMap<String, String> request = this.gson.fromJson(requestString, typeStringString);
+            if (!request.containsKey("command")) {
+                response.put("status", "No command found.");
+                response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
+            }
             String command = request.get("command");
             MinecraftLinkerCommandSender sender = new MinecraftLinkerCommandSender();
             sender.setIP(exchange.getRemoteAddress().getAddress());
@@ -39,9 +43,8 @@ public class CommandHandler extends AbstractHttpHandler {
             }
         }
         catch (JsonSyntaxException e) {
-            response.put("status", "JsonSyntaxException. " + e.getMessage());
+            response.put("status", "Could not parse JSON.");
             response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
-            e.printStackTrace();
         }
         catch (IOException e) {
             response.put("status", "Internal Server Error.");

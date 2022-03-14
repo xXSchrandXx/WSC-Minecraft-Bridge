@@ -19,6 +19,7 @@ public class PasswordAuthenticator extends BasicAuthenticator {
         this.user = user;
         this.password = password;
     }
+
     @Override
     public Result authenticate(HttpExchange exch) {
         Result result = this.handler.authenticate(exch);
