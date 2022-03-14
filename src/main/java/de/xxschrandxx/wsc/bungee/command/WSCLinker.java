@@ -59,7 +59,7 @@ public class WSCLinker extends Command {
         else {
             MinecraftLinkerBungee instance = MinecraftLinkerBungee.getInstance();
             instance.stopHandler(sender);
-            if (!instance.reloadConfig()) {
+            if (!instance.reloadConfiguration()) {
                 sender.sendMessage(new TextComponent("Could not reload Plugin. Error while loading 'config.xml'. Read logs for more intormation."));
                 return;
             }
@@ -182,9 +182,9 @@ public class WSCLinker extends Command {
     public void debug(CommandSender sender) {
         MinecraftLinkerBungee instance = MinecraftLinkerBungee.getInstance();
         sender.sendMessage(new TextComponent("Debug information:"));
-        sender.sendMessage(new TextComponent("Hostname: " + instance.getConfig().getString(MinecraftLinkerVars.Configuration.server.hostname)));
-        sender.sendMessage(new TextComponent("Port: " + instance.getConfig().getInt(MinecraftLinkerVars.Configuration.server.port)));
-        sender.sendMessage(new TextComponent("SSL: " + instance.getConfig().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)));
+        sender.sendMessage(new TextComponent("Hostname: " + instance.getConfiguration().getString(MinecraftLinkerVars.Configuration.server.hostname)));
+        sender.sendMessage(new TextComponent("Port: " + instance.getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.port)));
+        sender.sendMessage(new TextComponent("SSL: " + instance.getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)));
         if (instance.getHandler().whitelist == null) {
             sender.sendMessage(new TextComponent("Whitelist: Not enabled."));
         }
