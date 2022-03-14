@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import de.xxschrandxx.wsc.bungee.api.MinecraftLinkerEvent;
 import de.xxschrandxx.wsc.bungee.command.WSCLinker;
 import de.xxschrandxx.wsc.bungee.listener.HandlerListener;
+import de.xxschrandxx.wsc.core.IMinecraftLinker;
 import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
 import de.xxschrandxx.wsc.core.MinecraftLinkerVars;
 import net.md_5.bungee.api.CommandSender;
@@ -17,7 +18,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
-public class MinecraftLinkerBungee extends Plugin {
+public class MinecraftLinkerBungee extends Plugin implements IMinecraftLinker<CommandSender> {
 
     private static MinecraftLinkerBungee instance;
 
@@ -25,16 +26,19 @@ public class MinecraftLinkerBungee extends Plugin {
         return instance;
     }
 
+    // start of handler part
     private MinecraftLinkerHandler handler;
 
+    @Override
     public MinecraftLinkerHandler getHandler() {
         return this.handler;
     }
 
+    @Override
     public boolean setHandler(CommandSender sender) {
         InetSocketAddress addr;
         try {
-            addr = new InetSocketAddress(getConfig().getString(MinecraftLinkerVars.Configuration.server.hostname), getConfig().getInt(MinecraftLinkerVars.Configuration.server.port));
+            addr = new InetSocketAddress(getConfiguration().getString(MinecraftLinkerVars.Configuration.server.hostname), getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.port));
         }
         catch (IllegalArgumentException | SecurityException e) {
             if (sender == null) {
@@ -50,9 +54,9 @@ public class MinecraftLinkerBungee extends Plugin {
             this.handler = new MinecraftLinkerHandler(
                 getLogger(),
                 addr,
-                getConfig().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled),
-                getConfig().getString(MinecraftLinkerVars.Configuration.server.user),
-                getConfig().getString(MinecraftLinkerVars.Configuration.server.password)
+                getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled),
+                getConfiguration().getString(MinecraftLinkerVars.Configuration.server.user),
+                getConfiguration().getString(MinecraftLinkerVars.Configuration.server.password)
             );
         }
         catch (IOException e) {
@@ -80,19 +84,20 @@ public class MinecraftLinkerBungee extends Plugin {
     return true;
     }
 
+    @Override
     public void startHandler(CommandSender sender) {
-        if (getConfig().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)) {
+        if (getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)) {
             if (
                 getInstance().handler.start(
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-                    getConfig().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
-                    getConfig().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath),
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword),
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
+                    getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
+                    getConfiguration().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath),
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword),
                     getDataFolder(),
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyAlias),
-                    getConfig().getString(MinecraftLinkerVars.Configuration.server.ssl.keyPassword)
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyAlias),
+                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyPassword)
                 )
             ) {
                 if (sender == null) {
@@ -111,10 +116,10 @@ public class MinecraftLinkerBungee extends Plugin {
             }
         }
         getInstance().handler.start(
-            getConfig().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
-            getConfig().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-            getConfig().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
-            getConfig().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
+            getConfiguration().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
+            getConfiguration().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
+            getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
+            getConfiguration().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
             null,
             null,
             null,
@@ -129,6 +134,7 @@ public class MinecraftLinkerBungee extends Plugin {
         }
     }
 
+    @Override
     public void stopHandler(CommandSender sender) {
         if (getHandler() != null) {
             getHandler().stop();
@@ -140,12 +146,14 @@ public class MinecraftLinkerBungee extends Plugin {
             }
         }
     }
+    // end of handler part
 
+    // start of plugin part
+    @Override
     public void onEnable() {
-        // setting instance
         instance = this;
 
-        if (!reloadConfig()) {
+        if (!reloadConfiguration()) {
             getLogger().log(Level.SEVERE, "Could not load config.yml, disabeling plugin!");
             onDisable();
             return;
@@ -165,18 +173,23 @@ public class MinecraftLinkerBungee extends Plugin {
         startHandler(null);
     }
 
+    @Override
     public void onDisable() {
         stopHandler(null);
     }
+    // end of plugin part
 
     // start config part
     private File configFile = new File(getDataFolder(), "config.yml");
     private Configuration config;
-    public Configuration getConfig() {
+
+    @Override
+    public Configuration getConfiguration() {
         return getInstance().config;
     }
 
-    public boolean reloadConfig() {
+    @Override
+    public boolean reloadConfiguration() {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }
@@ -205,60 +218,61 @@ public class MinecraftLinkerBungee extends Plugin {
         // start config data
 
         // hostname
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.hostname, MinecraftLinkerVars.Configuration.server.defaults.hostname))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.hostname, MinecraftLinkerVars.Configuration.server.defaults.hostname))
             error = true;
         // port
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.port, MinecraftLinkerVars.Configuration.server.defaults.port))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.port, MinecraftLinkerVars.Configuration.server.defaults.port))
             error = true;
         // user
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.user, MinecraftLinkerVars.Configuration.server.defaults.user))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.user, MinecraftLinkerVars.Configuration.server.defaults.user))
             error = true;
         // password
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.password, MinecraftLinkerVars.Configuration.server.defaults.password))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.password, MinecraftLinkerVars.Configuration.server.defaults.password))
             error = true;
         // whitelistPath
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.whitelistPath, MinecraftLinkerVars.Configuration.server.defaults.whitelistPath))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.whitelistPath, MinecraftLinkerVars.Configuration.server.defaults.whitelistPath))
             error = true;
         // blacklistPath
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.blacklistPath, MinecraftLinkerVars.Configuration.server.defaults.blacklistPath))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.blacklistPath, MinecraftLinkerVars.Configuration.server.defaults.blacklistPath))
             error = true;
         // maxTries
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.maxTries, MinecraftLinkerVars.Configuration.server.floodgate.defaults.maxTries))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.floodgate.maxTries, MinecraftLinkerVars.Configuration.server.floodgate.defaults.maxTries))
             error = true;
         // resetTime
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.floodgate.resetTime, MinecraftLinkerVars.Configuration.server.floodgate.defaults.resetTime))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.floodgate.resetTime, MinecraftLinkerVars.Configuration.server.floodgate.defaults.resetTime))
             error = true;
         // enabled
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.enabled, MinecraftLinkerVars.Configuration.server.ssl.defaults.enabled))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.enabled, MinecraftLinkerVars.Configuration.server.ssl.defaults.enabled))
             error = true;
         // keyStorePath
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePath))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePath))
             error = true;
         // keyStorePassword
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePassword))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePassword))
             error = true;
         // keyAlias
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.keyAlias, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyAlias))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyAlias, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyAlias))
             error = true;
         // keyPassword
-        if (checkConfig(MinecraftLinkerVars.Configuration.server.ssl.keyPassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyPassword))
+        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyPassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyPassword))
             error = true;
 
         // end config data
 
         if (error) {
-            if (!saveConfig()) {
+            if (!saveConfiguration()) {
                 return false;
             }
-            return reloadConfig();
+            return reloadConfiguration();
         }
         return true;
     }
 
-    public boolean checkConfig(String path, Object def) {
-        if (getConfig().get(path) == null) {
+    @Override
+    public boolean checkConfiguration(String path, Object def) {
+        if (getConfiguration().get(path) == null) {
             getLogger().log(Level.WARNING, path + " is not set. Resetting it.");
-            getConfig().set(path, def);
+            getConfiguration().set(path, def);
             return true;
         }
         else {
@@ -266,7 +280,8 @@ public class MinecraftLinkerBungee extends Plugin {
         }
     }
 
-    public boolean saveConfig() {
+    @Override
+    public boolean saveConfiguration() {
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, configFile);
         }
