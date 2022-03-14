@@ -8,10 +8,10 @@ import java.util.HashMap;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
+import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
 import de.xxschrandxx.wsc.bungee.api.MinecraftLinkerCommandSender;
 
-public class CommandHandler extends AbstractHttpHandler {
+public class CommandHandler extends AbstractBungeeHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();

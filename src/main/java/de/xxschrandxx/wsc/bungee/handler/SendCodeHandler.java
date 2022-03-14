@@ -9,7 +9,7 @@ import java.util.UUID;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
+import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -17,7 +17,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class SendCodeHandler extends AbstractHttpHandler {
+public class SendCodeHandler extends AbstractBungeeHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();

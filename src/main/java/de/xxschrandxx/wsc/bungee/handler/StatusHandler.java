@@ -6,9 +6,9 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.xxschrandxx.wsc.bungee.MinecraftLinkerBungee;
-import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
+import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
 
-public class StatusHandler extends AbstractHttpHandler {
+public class StatusHandler extends AbstractBungeeHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();

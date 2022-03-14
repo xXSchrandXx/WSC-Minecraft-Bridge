@@ -5,11 +5,12 @@ import java.util.HashMap;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.bungee.api.AbstractHttpHandler;
+import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class PlayerListHandler extends AbstractHttpHandler {
+public class PlayerListHandler extends AbstractBungeeHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
