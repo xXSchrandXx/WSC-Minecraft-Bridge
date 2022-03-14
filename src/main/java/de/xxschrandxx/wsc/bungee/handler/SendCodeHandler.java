@@ -33,33 +33,41 @@ public class SendCodeHandler extends AbstractBungeeHttpHandler {
             if (!request.containsKey("uuid")) {
                 response.put("status", "No uuid set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("code")) {
                 response.put("status", "No code set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("message")) {
                 response.put("status", "No message set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("hover")) {
                 response.put("status", "No hover set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             UUID uuid = UUID.fromString(request.get("uuid"));
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
             if (player == null) {
                 response.put("status", "Player not found.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!player.isConnected()) {
                 response.put("status", "Player not connected.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             TextComponent message = new TextComponent(request.get("message"));
             message.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, request.get("code")));
             message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(request.get("hover"))));
             player.sendMessage(message);
+            response.put("status", "OK.");
+            response.put("statusCode", HttpURLConnection.HTTP_OK);
         }
         catch (JsonSyntaxException e) {
             response.put("status", "Could not parse JSON.");

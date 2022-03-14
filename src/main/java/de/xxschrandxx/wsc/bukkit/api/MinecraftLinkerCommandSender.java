@@ -3,8 +3,12 @@ package de.xxschrandxx.wsc.bukkit.api;
 import java.net.InetAddress;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
@@ -68,8 +72,29 @@ public class MinecraftLinkerCommandSender implements CommandSender {
         return MinecraftLinkerBukkit.getInstance().getServer();
     }
 
-    public boolean dispatchCommand(String commandline) {
-        return getServer().dispatchCommand(this, commandline);
+    // TODO
+    public boolean dispatchCommand(String commandLine) {
+        CompletableFuture<Boolean> future = new CompletableFuture<Boolean>();
+        MinecraftLinkerCommandSender instance = this;
+        getServer().getScheduler().runTask(MinecraftLinkerBukkit.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getServer().dispatchCommand(instance, commandLine);
+                    future.complete(true);
+                }
+                catch (CommandException e) {
+                    future.complete(false);
+                }
+            }
+            
+        });
+        try {
+            return future.get();
+        }
+        catch (CancellationException | ExecutionException | InterruptedException e) {
+            return false;
+        }
     }
 
     @Override

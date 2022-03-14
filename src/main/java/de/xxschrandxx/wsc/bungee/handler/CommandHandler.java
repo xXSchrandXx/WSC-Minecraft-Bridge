@@ -38,6 +38,7 @@ public class CommandHandler extends AbstractBungeeHttpHandler {
                 response.put("statusCode", HttpURLConnection.HTTP_OK);
             }
             else {
+                response.put("response", sender.flush());
                 response.put("status", "Command not found.");
                 response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
             }

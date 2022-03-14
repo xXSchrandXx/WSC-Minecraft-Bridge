@@ -1,7 +1,9 @@
 package de.xxschrandxx.wsc.bungee.handler;
 
 import java.net.HttpURLConnection;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -21,8 +23,16 @@ public class PlayerListHandler extends AbstractBungeeHttpHandler {
         }
         response.put("status", "OK");
         response.put("statusCode", HttpURLConnection.HTTP_OK);
-        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            response.put(player.getName(), player.getUniqueId());
+        Collection<ProxiedPlayer> players = ProxyServer.getInstance().getPlayers();
+        HashMap<String, UUID> map = new HashMap<String, UUID>();
+        if (players.isEmpty()) {
+            response.put("players", map);
+        }
+        else {
+            for (ProxiedPlayer player : players) {
+                map.put(player.getName(), player.getUniqueId());
+            }
+            response.put("players", map);
         }
         return response;
     }

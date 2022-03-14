@@ -30,28 +30,34 @@ public class SendCodeHandler extends AbstractBukkitHttpHandler {
             if (!request.containsKey("uuid")) {
                 response.put("status", "No uuid set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("code")) {
                 response.put("status", "No code set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("message")) {
                 response.put("status", "No message set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!request.containsKey("hover")) {
                 response.put("status", "No hover set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             UUID uuid = UUID.fromString(request.get("uuid"));
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) {
                 response.put("status", "Player not found.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             if (!player.isOnline()) {
                 response.put("status", "Player not connected.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
             }
             try {
                 Class.forName("org.bukkit.entity.Player.Spigot");
@@ -60,7 +66,8 @@ public class SendCodeHandler extends AbstractBukkitHttpHandler {
             catch (ClassNotFoundException e) {
                 player.sendMessage(request.get("message"));
             }
-
+            response.put("status", "OK.");
+            response.put("statusCode", HttpURLConnection.HTTP_OK);
         }
         catch (JsonSyntaxException e) {
             response.put("status", "Could not parse JSON.");
