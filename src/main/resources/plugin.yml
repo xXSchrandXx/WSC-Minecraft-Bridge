@@ -1,12 +1,12 @@
 name: ${project.artifactId}-bukkit
-main: ${project.groupId}.bukkit.MinecraftLinkerBukkit
+main: ${project.groupId}.bukkit.MinecraftBridgeBukkit
 version: ${project.version}
 author: xXSchrandXx
-description: WSC-Minecraft-Linker
+description: WSC-Minecraft-Bridge
 api-version: 1.13
 load: STARTUP
 softdepend: [LuckPerms, SkinsRestorer]
 
 commands:
-  wsclinker:
-    description: Command for WSC-Minecraft-Linker.
+  wscbridge:
+    description: Command for WSC-Minecraft-Bridge.

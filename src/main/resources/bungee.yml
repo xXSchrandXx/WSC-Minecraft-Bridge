@@ -1,10 +1,10 @@
 name: ${project.artifactId}-bungee
-main: ${project.groupId}.bungee.MinecraftLinkerBungee
+main: ${project.groupId}.bungee.MinecraftBridgeBungee
 version: ${project.version}
 author: xXSchrandXx
-description: WSC-Minecraft-Linker
+description: WSC-Minecraft-Bridge
 softdepend: [LuckPerms, SkinsRestorer]
 
 commands:
-  wsclinkerbungee:
-    description: Command for WSC-Minecraft-Linker.
+  wscbridgebungee:
+    description: Command for WSC-Minecraft-Bridge.

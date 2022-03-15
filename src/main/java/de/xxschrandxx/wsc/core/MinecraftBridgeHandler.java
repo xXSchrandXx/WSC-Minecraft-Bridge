@@ -50,7 +50,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 
-public class MinecraftLinkerHandler {
+public class MinecraftBridgeHandler {
 
     private final Logger logger;
 
@@ -84,7 +84,7 @@ public class MinecraftLinkerHandler {
      * @throws BindException @see {@link HttpServer#create(InetSocketAddress, int)}
      * @throws IOException @see {@link HttpServer#create(InetSocketAddress, int)}
      */
-    public MinecraftLinkerHandler(Logger logger, InetSocketAddress address, boolean useSSL, String user, String password) throws BindException, IOException {
+    public MinecraftBridgeHandler(Logger logger, InetSocketAddress address, boolean useSSL, String user, String password) throws BindException, IOException {
         this.logger = logger;
         if (useSSL)
             this.httpServer = HttpsServer.create(address, 0);

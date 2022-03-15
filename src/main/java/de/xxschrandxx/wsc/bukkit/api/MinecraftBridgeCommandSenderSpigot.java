@@ -6,11 +6,11 @@ import org.bukkit.command.CommandSender.Spigot;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
-public class MinecraftLinkerCommandSenderSpigot extends Spigot {
+public class MinecraftBridgeCommandSenderSpigot extends Spigot {
 
-    private final MinecraftLinkerCommandSender parent;
+    private final MinecraftBridgeCommandSender parent;
 
-    public MinecraftLinkerCommandSenderSpigot(MinecraftLinkerCommandSender parent) {
+    public MinecraftBridgeCommandSenderSpigot(MinecraftBridgeCommandSender parent) {
         this.parent = parent;
     }
 

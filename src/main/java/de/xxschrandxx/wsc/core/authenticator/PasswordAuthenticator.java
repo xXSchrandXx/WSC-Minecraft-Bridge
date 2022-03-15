@@ -3,17 +3,17 @@ package de.xxschrandxx.wsc.core.authenticator;
 import com.sun.net.httpserver.BasicAuthenticator;
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
+import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
 
 public class PasswordAuthenticator extends BasicAuthenticator {
 
-    private final MinecraftLinkerHandler handler;
+    private final MinecraftBridgeHandler handler;
 
     private final String user;
 
     private final String password;
 
-    public PasswordAuthenticator(MinecraftLinkerHandler handler, String user, String password) {
+    public PasswordAuthenticator(MinecraftBridgeHandler handler, String user, String password) {
         super("wsclinker");
         this.handler = handler;
         this.user = user;

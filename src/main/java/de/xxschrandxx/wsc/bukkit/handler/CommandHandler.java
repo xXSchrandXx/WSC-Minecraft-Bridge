@@ -9,7 +9,7 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.xxschrandxx.wsc.bukkit.api.AbstractBukkitHttpHandler;
-import de.xxschrandxx.wsc.bukkit.api.MinecraftLinkerCommandSender;
+import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeCommandSender;
 
 // TODO
 public class CommandHandler extends AbstractBukkitHttpHandler {
@@ -31,7 +31,7 @@ public class CommandHandler extends AbstractBukkitHttpHandler {
                 return response;
             }
             String command = request.get("command");
-            MinecraftLinkerCommandSender sender = new MinecraftLinkerCommandSender();
+            MinecraftBridgeCommandSender sender = new MinecraftBridgeCommandSender();
             sender.setIP(exchange.getRemoteAddress().getAddress());
             if (sender.dispatchCommand(command)) {
                 response.put("response", sender.flush());

@@ -1,12 +1,12 @@
 package de.xxschrandxx.wsc.core;
 
 // TODO
-public interface IMinecraftLinker<S> {
-    public static IMinecraftLinker<?> getInstance() {
+public interface IMinecraftBridge<S> {
+    public static IMinecraftBridge<?> getInstance() {
         return null;
     };
 
-    public MinecraftLinkerHandler getHandler();
+    public MinecraftBridgeHandler getHandler();
 
     public boolean setHandler(S sender);
 

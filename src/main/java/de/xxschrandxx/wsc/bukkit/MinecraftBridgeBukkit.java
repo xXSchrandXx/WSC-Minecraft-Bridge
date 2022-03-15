@@ -8,26 +8,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.xxschrandxx.wsc.bukkit.api.MinecraftLinkerEvent;
+import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeEvent;
 import de.xxschrandxx.wsc.bukkit.command.WSCLinker;
 import de.xxschrandxx.wsc.bukkit.listener.HandlerListener;
-import de.xxschrandxx.wsc.core.IMinecraftLinker;
-import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
-import de.xxschrandxx.wsc.core.MinecraftLinkerVars;
+import de.xxschrandxx.wsc.core.IMinecraftBridge;
+import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
+import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
 
-public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinker<CommandSender> {
+public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridge<CommandSender> {
 
-    private static MinecraftLinkerBukkit instance;
+    private static MinecraftBridgeBukkit instance;
 
-    public static MinecraftLinkerBukkit getInstance() {
+    public static MinecraftBridgeBukkit getInstance() {
         return instance;
     }
 
     // start of handler part
-    private MinecraftLinkerHandler handler;
+    private MinecraftBridgeHandler handler;
 
     @Override
-    public MinecraftLinkerHandler getHandler() {
+    public MinecraftBridgeHandler getHandler() {
         return this.handler;
     }
 
@@ -35,7 +35,7 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
     public boolean setHandler(CommandSender sender) {
         InetSocketAddress addr;
         try {
-            addr = new InetSocketAddress(getConfiguration().getString(MinecraftLinkerVars.Configuration.server.hostname), getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.port));
+            addr = new InetSocketAddress(getConfiguration().getString(MinecraftBridgeVars.Configuration.server.hostname), getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.port));
         }
         catch (IllegalArgumentException | SecurityException e) {
             if (sender == null) {
@@ -48,12 +48,12 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
         }
 
         try {
-            this.handler = new MinecraftLinkerHandler(
+            this.handler = new MinecraftBridgeHandler(
                 getLogger(),
                 addr,
-                getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled),
-                getConfiguration().getString(MinecraftLinkerVars.Configuration.server.user),
-                getConfiguration().getString(MinecraftLinkerVars.Configuration.server.password)
+                getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.server.ssl.enabled),
+                getConfiguration().getString(MinecraftBridgeVars.Configuration.server.user),
+                getConfiguration().getString(MinecraftBridgeVars.Configuration.server.password)
             );
         }
         catch (IOException e) {
@@ -71,7 +71,7 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
         else {
             sender.sendMessage("WebServer: Created instance.");
         }
-        instance.getServer().getPluginManager().callEvent(new MinecraftLinkerEvent());
+        instance.getServer().getPluginManager().callEvent(new MinecraftBridgeEvent());
         if (sender == null) {
             getLogger().log(Level.INFO, "Called registration event.");
         }
@@ -83,18 +83,18 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
 
     @Override
     public void startHandler(CommandSender sender) {
-        if (getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled)) {
+        if (getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.server.ssl.enabled)) {
             if (
                 getInstance().handler.start(
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-                    getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
-                    getConfiguration().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath),
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword),
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.whitelistPath),
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.blacklistPath),
+                    getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxTries),
+                    getConfiguration().getLong(MinecraftBridgeVars.Configuration.server.floodgate.resetTime),
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyStorePath),
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyStorePassword),
                     getDataFolder(),
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyAlias),
-                    getConfiguration().getString(MinecraftLinkerVars.Configuration.server.ssl.keyPassword)
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyAlias),
+                    getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyPassword)
                 )
             ) {
                 if (sender == null) {
@@ -113,10 +113,10 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
             }
         }
         getInstance().handler.start(
-            getConfiguration().getString(MinecraftLinkerVars.Configuration.server.whitelistPath),
-            getConfiguration().getString(MinecraftLinkerVars.Configuration.server.blacklistPath),
-            getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.floodgate.maxTries),
-            getConfiguration().getLong(MinecraftLinkerVars.Configuration.server.floodgate.resetTime),
+            getConfiguration().getString(MinecraftBridgeVars.Configuration.server.whitelistPath),
+            getConfiguration().getString(MinecraftBridgeVars.Configuration.server.blacklistPath),
+            getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxTries),
+            getConfiguration().getLong(MinecraftBridgeVars.Configuration.server.floodgate.resetTime),
             null,
             null,
             null,
@@ -163,7 +163,7 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
         getServer().getPluginManager().registerEvents(new HandlerListener(), getInstance());
         getCommand("wsclinker").setExecutor(new WSCLinker());
 
-        getServer().getPluginManager().callEvent(new MinecraftLinkerEvent());
+        getServer().getPluginManager().callEvent(new MinecraftBridgeEvent());
 
         // TODO wait until every plugin has started.
         startHandler(null);
@@ -190,43 +190,43 @@ public class MinecraftLinkerBukkit extends JavaPlugin implements IMinecraftLinke
         // start config data
 
         // hostname
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.hostname, MinecraftLinkerVars.Configuration.server.defaults.hostname))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.hostname, MinecraftBridgeVars.Configuration.server.defaults.hostname))
             error = true;
         // port
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.port, MinecraftLinkerVars.Configuration.server.defaults.port))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.port, MinecraftBridgeVars.Configuration.server.defaults.port))
             error = true;
         // user
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.user, MinecraftLinkerVars.Configuration.server.defaults.user))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.user, MinecraftBridgeVars.Configuration.server.defaults.user))
             error = true;
         // password
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.password, MinecraftLinkerVars.Configuration.server.defaults.password))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.password, MinecraftBridgeVars.Configuration.server.defaults.password))
             error = true;
         // whitelistPath
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.whitelistPath, MinecraftLinkerVars.Configuration.server.defaults.whitelistPath))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.whitelistPath, MinecraftBridgeVars.Configuration.server.defaults.whitelistPath))
             error = true;
         // blacklistPath
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.blacklistPath, MinecraftLinkerVars.Configuration.server.defaults.blacklistPath))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.blacklistPath, MinecraftBridgeVars.Configuration.server.defaults.blacklistPath))
             error = true;
         // maxTries
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.floodgate.maxTries, MinecraftLinkerVars.Configuration.server.floodgate.defaults.maxTries))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.floodgate.maxTries, MinecraftBridgeVars.Configuration.server.floodgate.defaults.maxTries))
             error = true;
         // resetTime
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.floodgate.resetTime, MinecraftLinkerVars.Configuration.server.floodgate.defaults.resetTime))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.floodgate.resetTime, MinecraftBridgeVars.Configuration.server.floodgate.defaults.resetTime))
             error = true;
         // enabled
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.enabled, MinecraftLinkerVars.Configuration.server.ssl.defaults.enabled))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.enabled, MinecraftBridgeVars.Configuration.server.ssl.defaults.enabled))
             error = true;
         // keyStorePath
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyStorePath, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePath))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyStorePath, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyStorePath))
             error = true;
         // keyStorePassword
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyStorePassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyStorePassword))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyStorePassword, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyStorePassword))
             error = true;
         // keyAlias
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyAlias, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyAlias))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyAlias, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyAlias))
             error = true;
         // keyPassword
-        if (checkConfiguration(MinecraftLinkerVars.Configuration.server.ssl.keyPassword, MinecraftLinkerVars.Configuration.server.ssl.defaults.keyPassword))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyPassword, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyPassword))
             error = true;
 
         // end config data

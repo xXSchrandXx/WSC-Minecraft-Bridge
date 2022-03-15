@@ -8,7 +8,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 
-public class MinecraftLinkerCommandSender implements CommandSender {
+public class MinecraftBridgeCommandSender implements CommandSender {
 
     private InetAddress ip;
 
@@ -21,7 +21,7 @@ public class MinecraftLinkerCommandSender implements CommandSender {
     }
 
     public String getName() {
-        return "MinecraftLinker";
+        return "MinecraftBridge";
     }
 
     public boolean hasPermission(String permission) {

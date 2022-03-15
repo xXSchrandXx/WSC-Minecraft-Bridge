@@ -3,7 +3,7 @@ package de.xxschrandxx.wsc.bukkit.api;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MinecraftLinkerEvent extends Event {
+public class MinecraftBridgeEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     public static HandlerList getHandlerList() {
         return HANDLERS;

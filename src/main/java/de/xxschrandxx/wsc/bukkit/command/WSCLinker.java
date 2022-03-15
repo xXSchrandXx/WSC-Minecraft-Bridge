@@ -11,9 +11,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import de.xxschrandxx.wsc.bukkit.MinecraftLinkerBukkit;
-import de.xxschrandxx.wsc.bukkit.api.MinecraftLinkerCommandSender;
-import de.xxschrandxx.wsc.core.MinecraftLinkerVars;
+import de.xxschrandxx.wsc.bukkit.MinecraftBridgeBukkit;
+import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeCommandSender;
+import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
 
 public class WSCLinker implements CommandExecutor {
 
@@ -35,20 +35,20 @@ public class WSCLinker implements CommandExecutor {
                 return blacklist(sender, args);
             }
         }
-        PluginDescriptionFile d = MinecraftLinkerBukkit.getInstance().getDescription();
+        PluginDescriptionFile d = MinecraftBridgeBukkit.getInstance().getDescription();
         sender.sendMessage(d.getName() + " " + d.getVersion() + " by " + d.getAuthors());
         return true;
     }
 
     public boolean reload(CommandSender sender, String[] args) {
-        if (sender instanceof MinecraftLinkerCommandSender) {
+        if (sender instanceof MinecraftBridgeCommandSender) {
             sender.sendMessage("Not supported.");
         }
         else if (!sender.hasPermission("rcon.command.reload")) {
             sender.sendMessage("You don't have permission to do that.");
         }
         else {
-            MinecraftLinkerBukkit instance = MinecraftLinkerBukkit.getInstance();
+            MinecraftBridgeBukkit instance = MinecraftBridgeBukkit.getInstance();
             instance.stopHandler(sender);
             if (!instance.reloadConfiguration()) {
                 sender.sendMessage("Could not reload Plugin. Error while loading 'config.xml'. Read logs for more intormation.");
@@ -65,13 +65,13 @@ public class WSCLinker implements CommandExecutor {
     }
 
     public boolean whitelist(CommandSender sender, String[] args) {
-        if (sender instanceof MinecraftLinkerCommandSender) {
+        if (sender instanceof MinecraftBridgeCommandSender) {
             sender.sendMessage("Not supported.");
         }
         else if (!sender.hasPermission("rcon.command.whitelist")) {
             sender.sendMessage("You don't have permission to do that.");
         }
-        else if (MinecraftLinkerBukkit.getInstance().getHandler().whitelist == null) {
+        else if (MinecraftBridgeBukkit.getInstance().getHandler().whitelist == null) {
             sender.sendMessage("Whitelist not set.");
         }
         else if (args.length == 1) {
@@ -80,7 +80,7 @@ public class WSCLinker implements CommandExecutor {
         else if (args[1].equalsIgnoreCase("add")) {
             try {
                 InetAddress address = InetAddress.getByName(args[2]);
-                if (MinecraftLinkerBukkit.getInstance().getHandler().whitelist.add(address)) {
+                if (MinecraftBridgeBukkit.getInstance().getHandler().whitelist.add(address)) {
                     sender.sendMessage("Added.");
                 }
                 else {
@@ -94,7 +94,7 @@ public class WSCLinker implements CommandExecutor {
         else if (args[1].equalsIgnoreCase("remove")) {
             try {
                 InetAddress address = InetAddress.getByName(args[2]);
-                if (MinecraftLinkerBukkit.getInstance().getHandler().whitelist.remove(address)) {
+                if (MinecraftBridgeBukkit.getInstance().getHandler().whitelist.remove(address)) {
                     sender.sendMessage("Removed.");
                 }
                 else {
@@ -107,7 +107,7 @@ public class WSCLinker implements CommandExecutor {
         }
         else if (args[1].equalsIgnoreCase("list")) {
             String result = "Whitelist:";
-            for (InetAddress address : MinecraftLinkerBukkit.getInstance().getHandler().whitelist) {
+            for (InetAddress address : MinecraftBridgeBukkit.getInstance().getHandler().whitelist) {
                 result += "\r\n" + address;
             }
             sender.sendMessage(result);
@@ -119,13 +119,13 @@ public class WSCLinker implements CommandExecutor {
     }
 
     public boolean blacklist(CommandSender sender, String[] args) {
-        if (sender instanceof MinecraftLinkerCommandSender) {
+        if (sender instanceof MinecraftBridgeCommandSender) {
             sender.sendMessage("Not supported.");
         }
         else if (!sender.hasPermission("rcon.command.blacklist")) {
             sender.sendMessage("You don't have permission to do that.");
         }
-        else if (MinecraftLinkerBukkit.getInstance().getHandler().blacklist == null) {
+        else if (MinecraftBridgeBukkit.getInstance().getHandler().blacklist == null) {
             sender.sendMessage("Blacklist not set.");
         }
         else if (args.length == 1) {
@@ -134,7 +134,7 @@ public class WSCLinker implements CommandExecutor {
         else if (args[1].equalsIgnoreCase("add")) {
             try {
                 InetAddress address = InetAddress.getByName(args[2]);
-                if (MinecraftLinkerBukkit.getInstance().getHandler().blacklist.add(address)) {
+                if (MinecraftBridgeBukkit.getInstance().getHandler().blacklist.add(address)) {
                     sender.sendMessage("Added.");
                 }
                 else {
@@ -148,7 +148,7 @@ public class WSCLinker implements CommandExecutor {
         else if (args[1].equalsIgnoreCase("remove")) {
             try {
                 InetAddress address = InetAddress.getByName(args[2]);
-                if (MinecraftLinkerBukkit.getInstance().getHandler().blacklist.remove(address)) {
+                if (MinecraftBridgeBukkit.getInstance().getHandler().blacklist.remove(address)) {
                     sender.sendMessage("Removed.");
                 }
                 else {
@@ -161,7 +161,7 @@ public class WSCLinker implements CommandExecutor {
         }
         else if (args[1].equalsIgnoreCase("list")) {
             String result = "Blacklist:";
-            for (InetAddress address : MinecraftLinkerBukkit.getInstance().getHandler().blacklist) {
+            for (InetAddress address : MinecraftBridgeBukkit.getInstance().getHandler().blacklist) {
                 result += "\r\n" + address;
             }
             sender.sendMessage(result);
@@ -174,11 +174,11 @@ public class WSCLinker implements CommandExecutor {
 
     private final SimpleDateFormat format = new SimpleDateFormat();
     public boolean debug(CommandSender sender) {
-        MinecraftLinkerBukkit instance = MinecraftLinkerBukkit.getInstance();
+        MinecraftBridgeBukkit instance = MinecraftBridgeBukkit.getInstance();
         sender.sendMessage("Debug information:");
-        sender.sendMessage("Hostname: " + instance.getConfiguration().getString(MinecraftLinkerVars.Configuration.server.hostname));
-        sender.sendMessage("Port: " + instance.getConfiguration().getInt(MinecraftLinkerVars.Configuration.server.port));
-        sender.sendMessage("SSL: " + instance.getConfiguration().getBoolean(MinecraftLinkerVars.Configuration.server.ssl.enabled));
+        sender.sendMessage("Hostname: " + instance.getConfiguration().getString(MinecraftBridgeVars.Configuration.server.hostname));
+        sender.sendMessage("Port: " + instance.getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.port));
+        sender.sendMessage("SSL: " + instance.getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.server.ssl.enabled));
         if (instance.getHandler().whitelist == null) {
             sender.sendMessage("Whitelist: Not enabled.");
         }

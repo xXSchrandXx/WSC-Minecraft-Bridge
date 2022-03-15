@@ -1,6 +1,6 @@
 package de.xxschrandxx.wsc.core;
 
-public final class MinecraftLinkerVars {
+public final class MinecraftBridgeVars {
     public final static class Configuration {
         public final static class server {
             /** hostname for webserver */

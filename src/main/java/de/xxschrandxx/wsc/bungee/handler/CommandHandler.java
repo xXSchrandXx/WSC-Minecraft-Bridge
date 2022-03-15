@@ -9,7 +9,7 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
-import de.xxschrandxx.wsc.bungee.api.MinecraftLinkerCommandSender;
+import de.xxschrandxx.wsc.bungee.api.MinecraftBridgeCommandSender;
 
 public class CommandHandler extends AbstractBungeeHttpHandler {
     @Override
@@ -30,7 +30,7 @@ public class CommandHandler extends AbstractBungeeHttpHandler {
                 return response;
             }
             String command = request.get("command");
-            MinecraftLinkerCommandSender sender = new MinecraftLinkerCommandSender();
+            MinecraftBridgeCommandSender sender = new MinecraftBridgeCommandSender();
             sender.setIP(exchange.getRemoteAddress().getAddress());
             if (sender.dispatchCommand(command)) {
                 response.put("response", sender.flush());

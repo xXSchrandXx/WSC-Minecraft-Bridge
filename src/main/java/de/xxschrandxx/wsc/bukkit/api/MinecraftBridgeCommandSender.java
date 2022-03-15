@@ -15,9 +15,9 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
-import de.xxschrandxx.wsc.bukkit.MinecraftLinkerBukkit;
+import de.xxschrandxx.wsc.bukkit.MinecraftBridgeBukkit;
 
-public class MinecraftLinkerCommandSender implements CommandSender {
+public class MinecraftBridgeCommandSender implements CommandSender {
 
     private InetAddress ip;
 
@@ -31,7 +31,7 @@ public class MinecraftLinkerCommandSender implements CommandSender {
 
     @Override
     public String getName() {
-        return "MinecraftLinker";
+        return "MinecraftBridge";
     }
 
     protected final StringBuffer buffer = new StringBuffer();
@@ -69,14 +69,14 @@ public class MinecraftLinkerCommandSender implements CommandSender {
 
     @Override
     public Server getServer() {
-        return MinecraftLinkerBukkit.getInstance().getServer();
+        return MinecraftBridgeBukkit.getInstance().getServer();
     }
 
     // TODO
     public boolean dispatchCommand(String commandLine) {
         CompletableFuture<Boolean> future = new CompletableFuture<Boolean>();
-        MinecraftLinkerCommandSender instance = this;
-        getServer().getScheduler().runTask(MinecraftLinkerBukkit.getInstance(), new Runnable() {
+        MinecraftBridgeCommandSender instance = this;
+        getServer().getScheduler().runTask(MinecraftBridgeBukkit.getInstance(), new Runnable() {
             @Override
             public void run() {
                 try {
@@ -164,6 +164,6 @@ public class MinecraftLinkerCommandSender implements CommandSender {
 
     @Override
     public Spigot spigot() {
-        return new MinecraftLinkerCommandSenderSpigot(this);
+        return new MinecraftBridgeCommandSenderSpigot(this);
     }
 }

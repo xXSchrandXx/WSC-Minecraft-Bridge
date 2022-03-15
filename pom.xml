@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.xxschrandxx.wsc</groupId>
-	<artifactId>wsclinker</artifactId>
+	<artifactId>wscbridge</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 
-	<name>WSC-Minecraft-Linker</name>
-	<url>https://github.com/xXSchrandXx/WSC-Minecraft-Linker</url>
+	<name>WSC-Minecraft-Bridge</name>
+	<url>https://github.com/xXSchrandXx/WSC-Minecraft-Bridge</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -168,6 +168,6 @@
 
 	<issueManagement>
 		<system>Issues</system>
-		<url>https://github.com/xXSchrandXx/WSC-Minecraft-Linker/issues/new</url>
+		<url>https://github.com/xXSchrandXx/WSC-Minecraft-Bridge/issues/new</url>
 	</issueManagement>
 </project>

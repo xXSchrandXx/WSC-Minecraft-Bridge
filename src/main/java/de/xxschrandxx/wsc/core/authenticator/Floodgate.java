@@ -3,13 +3,13 @@ package de.xxschrandxx.wsc.core.authenticator;
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.core.MinecraftLinkerHandler;
+import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
 
 public class Floodgate extends Authenticator {
 
-    private final MinecraftLinkerHandler handler;
+    private final MinecraftBridgeHandler handler;
 
-    public Floodgate(MinecraftLinkerHandler handler) {
+    public Floodgate(MinecraftBridgeHandler handler) {
         this.handler = handler;
     }
 
