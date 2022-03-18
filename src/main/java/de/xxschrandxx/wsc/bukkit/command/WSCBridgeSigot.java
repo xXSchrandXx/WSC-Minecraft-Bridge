@@ -7,7 +7,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class WSCLinkerSigot {
+public class WSCBridgeSigot {
     public static void sendWhitelistMessage(CommandSender sender) {
         TextComponent whitelist = new TextComponent("Whitelist: Enabled.");
         whitelist.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/wsclinkerbungee whitelist list"));

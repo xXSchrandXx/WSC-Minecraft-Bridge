@@ -53,6 +53,13 @@ public final class MinecraftBridgeVars {
                 }
             }
         }
+        public final static class modules {
+            /** weather permission module should be enabled */
+            public final static String permission = "modules.permission";
+            public final static class defaults {
+                public final static Boolean permission = false;
+            }
+        }
     }
 
     public class HttpStatusCodes {

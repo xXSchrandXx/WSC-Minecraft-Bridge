@@ -15,7 +15,7 @@ import de.xxschrandxx.wsc.bukkit.MinecraftBridgeBukkit;
 import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeCommandSender;
 import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
 
-public class WSCLinker implements CommandExecutor {
+public class WSCBridge implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -185,7 +185,7 @@ public class WSCLinker implements CommandExecutor {
         else {
             try {
                 Class.forName("org.bukkit.command.CommandSender.Spigot");
-                WSCLinkerSigot.sendWhitelistMessage(sender);
+                WSCBridgeSigot.sendWhitelistMessage(sender);
             }
             catch (ClassNotFoundException e) {
                 sender.sendMessage("Whitelist: Enabled. (List with '/wsclinker whitelist list')");
@@ -197,7 +197,7 @@ public class WSCLinker implements CommandExecutor {
         else {
             try {
                 Class.forName("org.bukkit.command.CommandSender.Spigot");
-                WSCLinkerSigot.sendBlacklistMessage(sender);
+                WSCBridgeSigot.sendBlacklistMessage(sender);
             }
             catch (ClassNotFoundException e) {
                 sender.sendMessage("Blacklist: Enabled. (List with '/wsclinker blacklist list')");

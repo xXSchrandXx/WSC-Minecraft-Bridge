@@ -2,7 +2,6 @@ package de.xxschrandxx.wsc.bungee.handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -27,9 +26,7 @@ public class SendCodeHandler extends AbstractBungeeHttpHandler {
             return response;
         }
         try {
-            byte[] requestBytes = exchange.getRequestBody().readAllBytes();
-            String requestString = new String(requestBytes, StandardCharsets.UTF_8);
-            HashMap<String, String> request = this.gson.fromJson(requestString, typeStringString);
+            HashMap<String, String> request = readRequestBody(exchange);
             if (!request.containsKey("uuid")) {
                 response.put("status", "No uuid set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);

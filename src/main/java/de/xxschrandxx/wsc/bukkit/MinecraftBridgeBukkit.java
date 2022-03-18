@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeEvent;
-import de.xxschrandxx.wsc.bukkit.command.WSCLinker;
-import de.xxschrandxx.wsc.bukkit.listener.HandlerListener;
+import de.xxschrandxx.wsc.bukkit.command.*;
+import de.xxschrandxx.wsc.bukkit.listener.*;
 import de.xxschrandxx.wsc.core.IMinecraftBridge;
 import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
 import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
@@ -156,12 +157,17 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
             return;
         }
 
+
+        // start bstats
+        new Metrics(this, 14658);
+
         if (!setHandler(null)) {
             return;
         }
 
         getServer().getPluginManager().registerEvents(new HandlerListener(), getInstance());
-        getCommand("wsclinker").setExecutor(new WSCLinker());
+        getServer().getPluginManager().registerEvents(new ModulesListener(), getInstance());
+        getCommand("wscbridge").setExecutor(new WSCBridge());
 
         getServer().getPluginManager().callEvent(new MinecraftBridgeEvent());
 
@@ -227,6 +233,9 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
             error = true;
         // keyPassword
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyPassword, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyPassword))
+            error = true;
+        // permission
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission, MinecraftBridgeVars.Configuration.modules.defaults.permission))
             error = true;
 
         // end config data

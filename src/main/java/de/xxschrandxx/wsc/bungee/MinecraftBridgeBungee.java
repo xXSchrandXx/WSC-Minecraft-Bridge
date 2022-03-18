@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 
+import org.bstats.bungeecord.Metrics;
+
 import de.xxschrandxx.wsc.bungee.api.MinecraftBridgeEvent;
-import de.xxschrandxx.wsc.bungee.command.WSCLinker;
-import de.xxschrandxx.wsc.bungee.listener.HandlerListener;
+import de.xxschrandxx.wsc.bungee.command.*;
+import de.xxschrandxx.wsc.bungee.listener.*;
 import de.xxschrandxx.wsc.core.IMinecraftBridge;
 import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
 import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
@@ -160,12 +162,16 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
             return;
         }
 
+        // start bstats
+        new Metrics(this, 14659);
+
         if (!setHandler(null)) {
             return;
         }
 
         getProxy().getPluginManager().registerListener(getInstance(), new HandlerListener());
-        getProxy().getPluginManager().registerCommand(getInstance(), new WSCLinker());
+        getProxy().getPluginManager().registerListener(getInstance(), new ModulesListener());
+        getProxy().getPluginManager().registerCommand(getInstance(), new WSCBridge());
 
         getProxy().getPluginManager().callEvent(new MinecraftBridgeEvent());
 
@@ -255,6 +261,9 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
             error = true;
         // keyPassword
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyPassword, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyPassword))
+            error = true;
+        // permission
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission, MinecraftBridgeVars.Configuration.modules.defaults.permission))
             error = true;
 
         // end config data

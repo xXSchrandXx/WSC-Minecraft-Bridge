@@ -2,6 +2,7 @@ package de.xxschrandxx.wsc.core;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -38,6 +41,13 @@ public abstract class AbstractHttpHandler implements HttpHandler {
         exchange.sendResponseHeaders((int) response.get("statusCode"), jsonBytes.length);
         exchange.getResponseBody().write(jsonBytes);
         exchange.close();
+    }
+
+    protected HashMap<String, String> readRequestBody(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException {
+        byte[] requestBytes = exchange.getRequestBody().readAllBytes();
+        String requestString = new String(requestBytes, StandardCharsets.UTF_8);
+        HashMap<String, String> request = this.gson.fromJson(requestString, typeStringString);
+        return request;
     }
 
     protected abstract Logger getLogger();

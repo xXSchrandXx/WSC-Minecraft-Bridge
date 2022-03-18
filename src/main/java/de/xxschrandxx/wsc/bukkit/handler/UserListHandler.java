@@ -1,4 +1,4 @@
-package de.xxschrandxx.wsc.bungee.handler;
+package de.xxschrandxx.wsc.bukkit.handler;
 
 import java.net.HttpURLConnection;
 import java.util.Collection;
@@ -7,12 +7,12 @@ import java.util.UUID;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import de.xxschrandxx.wsc.bungee.api.AbstractBungeeHttpHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import de.xxschrandxx.wsc.bukkit.api.AbstractBukkitHttpHandler;
 
-public class PlayerListHandler extends AbstractBungeeHttpHandler {
+public class UserListHandler extends AbstractBukkitHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -23,16 +23,16 @@ public class PlayerListHandler extends AbstractBungeeHttpHandler {
         }
         response.put("status", "OK");
         response.put("statusCode", HttpURLConnection.HTTP_OK);
-        Collection<ProxiedPlayer> players = ProxyServer.getInstance().getPlayers();
-        HashMap<String, UUID> map = new HashMap<String, UUID>();
+        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        HashMap<UUID, String> map = new HashMap<UUID, String>();
         if (players.isEmpty()) {
-            response.put("players", map);
+            response.put("user", map);
         }
         else {
-            for (ProxiedPlayer player : players) {
-                map.put(player.getName(), player.getUniqueId());
+            for (Player player : players) {
+                map.put(player.getUniqueId(), player.getName());
             }
-            response.put("players", map);
+            response.put("user", map);
         }
         return response;
     }

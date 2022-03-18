@@ -23,6 +23,12 @@
 			<id>spigot-bungee-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<!-- Permission Plugins -->
+		<!-- LuckPerms -->
+		<repository>
+			<id>codemc-release</id>
+			<url>https://repo.codemc.org/repository/maven-releases</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -44,6 +50,27 @@
 			<groupId>com.sun.net.httpserver</groupId>
 			<artifactId>http</artifactId>
 			<version>20070405</version>
+		</dependency>
+		<!-- bStats -->
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bungeecord</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Permission plugins -->
+		<!-- LuckPerms -->
+		<dependency>
+			<groupId>net.luckperms</groupId>
+			<artifactId>api</artifactId>
+			<version>5.4</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -108,9 +135,16 @@
 						</goals>
 						<configuration>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<relocations>
+								<relocation>
+									<pattern>org.bstats</pattern>
+									<shadedPattern>de.xxschrandxx.wsc.api.org.bstats</shadedPattern>
+								</relocation>
+							</relocations>
 							<artifactSet>
 								<includes>
 									<include>com.sun.net.httpserver:http</include>
+									<include>org.bstats</include>
 								</includes>
 							</artifactSet>
 						</configuration>

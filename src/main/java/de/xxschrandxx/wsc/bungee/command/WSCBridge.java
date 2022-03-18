@@ -17,10 +17,10 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.PluginDescription;
 
-public class WSCLinker extends Command {
+public class WSCBridge extends Command {
 
-    public WSCLinker() {
-        super("wsclinkerbungee");
+    public WSCBridge() {
+        super("wscbridgebungee");
     }
 
     @Override

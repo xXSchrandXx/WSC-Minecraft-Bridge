@@ -2,7 +2,6 @@ package de.xxschrandxx.wsc.bungee.handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import com.google.gson.JsonSyntaxException;
@@ -21,9 +20,7 @@ public class CommandHandler extends AbstractBungeeHttpHandler {
             return response;
         }
         try {
-            byte[] requestBytes = exchange.getRequestBody().readAllBytes();
-            String requestString = new String(requestBytes, StandardCharsets.UTF_8);
-            HashMap<String, String> request = this.gson.fromJson(requestString, typeStringString);
+            HashMap<String, String> request = readRequestBody(exchange);
             if (!request.containsKey("command")) {
                 response.put("status", "No command found.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
