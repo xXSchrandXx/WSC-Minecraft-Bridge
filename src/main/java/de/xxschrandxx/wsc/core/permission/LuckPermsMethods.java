@@ -26,6 +26,7 @@ public abstract class LuckPermsMethods extends AbstractHttpHandler {
         HashMap<String, Object> response = new HashMap<String, Object>();
         response.put("status", "OK");
         response.put("statusCode", HttpURLConnection.HTTP_OK);
+        response.put("plugin", "LuckPerms");
         response.put("version", this.api.getPluginMetadata().getVersion());
         response.put("apiVersion", this.api.getPluginMetadata().getApiVersion());
         return response;
