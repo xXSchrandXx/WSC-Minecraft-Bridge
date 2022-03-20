@@ -31,7 +31,7 @@ public abstract class AbstractHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        getLogger().log(Level.INFO, "WebServer: Incomming '" + exchange.getRequestMethod() + "' Request from: " + exchange.getRemoteAddress().getAddress());
+        getLogger().log(Level.INFO, "WebServer: Incomming '" + exchange.getRequestMethod() + " " + exchange.getRequestURI() + "' Request from: " + exchange.getRemoteAddress().getAddress());
 
         HashMap<String, Object> response = run(exchange);
         String json = this.gson.toJson(response);

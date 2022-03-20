@@ -35,6 +35,10 @@ public class HandlerListener implements Listener {
             else {
                 instance.getLogger().log(Level.WARNING, "WebServer: No supportet Permissionplugin found.");
                 handler.addPasswordHandler("/permission", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/groupList", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/getUserGroups", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/addUserToGroup", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/removeUserFromGroup", new DefaultPermissionHandler());
             }
         }
     }

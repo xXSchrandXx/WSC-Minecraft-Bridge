@@ -42,7 +42,7 @@ public abstract class LuckPermsMethods extends AbstractHttpHandler {
         }
         response.put("status", "OK");
         response.put("statusCode", HttpURLConnection.HTTP_OK);
-        response.put("goups", groupList);
+        response.put("groups", groupList);
         return response;
     }
 

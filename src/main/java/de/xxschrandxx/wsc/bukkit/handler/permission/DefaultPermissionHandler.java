@@ -13,7 +13,7 @@ public class DefaultPermissionHandler extends AbstractBukkitHttpHandler {
     protected HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         response.put("status", "No supported Permission Plugin found.");
-        response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
+        response.put("statusCode", HttpURLConnection.HTTP_NO_CONTENT);
         return response;
     }
 

@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 
 public class MinecraftBridgeModulesEvent extends Event {
 
-    private ArrayList<String> modules = new ArrayList<String>();
+    private final ArrayList<String> modules = new ArrayList<String>();
 
     public boolean addModule(String module) {
         return this.modules.add(module);

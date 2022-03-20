@@ -23,9 +23,13 @@ public class StatusHandler extends AbstractBukkitHttpHandler {
                 response.put("applicationDescription", MinecraftBridgeBukkit.getInstance().getDescription().getDescription());
                 response.put("platformName", MinecraftBridgeBukkit.getInstance().getServer().getName());
                 response.put("platformVersion", MinecraftBridgeBukkit.getInstance().getServer().getVersion());
-                MinecraftBridgeModulesEvent event = new MinecraftBridgeModulesEvent();
-                MinecraftBridgeBukkit.getInstance().getServer().getPluginManager().callEvent(event);
-                response.put("modules", event.getModules());
+                try {
+                    MinecraftBridgeModulesEvent event = new MinecraftBridgeModulesEvent();
+                    MinecraftBridgeBukkit.getInstance().getServer().getPluginManager().callEvent(event);
+                    response.put("modules", event.getModules());
+                }
+                catch (IllegalStateException e) {
+                }
             }
             else {
                 response.put("status", "Method Not Allowed.");
