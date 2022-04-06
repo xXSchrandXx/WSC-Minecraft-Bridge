@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Server;
 import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 import de.xxschrandxx.wsc.bukkit.MinecraftBridgeBukkit;
 
-public class MinecraftBridgeCommandSender implements CommandSender {
+public class MinecraftBridgeCommandSender implements RemoteConsoleCommandSender {
 
     private InetAddress ip;
 
@@ -72,7 +72,6 @@ public class MinecraftBridgeCommandSender implements CommandSender {
         return MinecraftBridgeBukkit.getInstance().getServer();
     }
 
-    // TODO
     public boolean dispatchCommand(String commandLine) {
         CompletableFuture<Boolean> future = new CompletableFuture<Boolean>();
         MinecraftBridgeCommandSender instance = this;

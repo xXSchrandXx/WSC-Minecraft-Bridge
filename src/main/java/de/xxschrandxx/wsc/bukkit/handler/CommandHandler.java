@@ -10,7 +10,6 @@ import com.sun.net.httpserver.HttpExchange;
 import de.xxschrandxx.wsc.bukkit.api.AbstractBukkitHttpHandler;
 import de.xxschrandxx.wsc.bukkit.api.MinecraftBridgeCommandSender;
 
-// TODO
 public class CommandHandler extends AbstractBukkitHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
