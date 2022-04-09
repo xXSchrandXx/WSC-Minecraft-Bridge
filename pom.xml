@@ -6,7 +6,7 @@
 
 	<groupId>de.xxschrandxx.wsc</groupId>
 	<artifactId>wscbridge</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4-SNAPSHOT</version>
 
 	<name>WSC-Minecraft-Bridge</name>
 	<url>https://github.com/xXSchrandXx/WSC-Minecraft-Bridge</url>
