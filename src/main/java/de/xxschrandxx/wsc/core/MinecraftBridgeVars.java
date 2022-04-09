@@ -43,13 +43,16 @@ public final class MinecraftBridgeVars {
                 }
             }
             public final static class floodgate {
-                /** max attempts until an ip gets bocked */
+                /** max attempts until an ip gets blocked temporality */
                 public final static String maxTries = "server.floodgate.maxTries";
                 /** time in milliseconds after the floodgate resets */
                 public final static String resetTime = "server.floodgate.resetTime";
+                /** max overruns until ip gets blocked permanent */
+                public final static String maxOverruns = "server.floodgate.maxOverruns";
                 public final static class defaults {
                     public final static Integer maxTries = 600;
                     public final static Long resetTime = 600000L; 
+                    public final static Integer maxOverruns = 0;
                 }
             }
         }

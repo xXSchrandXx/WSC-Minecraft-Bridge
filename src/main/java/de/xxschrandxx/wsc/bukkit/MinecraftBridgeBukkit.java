@@ -91,6 +91,7 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
                     getConfiguration().getString(MinecraftBridgeVars.Configuration.server.blacklistPath),
                     getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxTries),
                     getConfiguration().getLong(MinecraftBridgeVars.Configuration.server.floodgate.resetTime),
+                    getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxOverruns),
                     getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyStorePath),
                     getConfiguration().getString(MinecraftBridgeVars.Configuration.server.ssl.keyStorePassword),
                     getDataFolder(),
@@ -118,6 +119,7 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
             getConfiguration().getString(MinecraftBridgeVars.Configuration.server.blacklistPath),
             getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxTries),
             getConfiguration().getLong(MinecraftBridgeVars.Configuration.server.floodgate.resetTime),
+            getConfiguration().getInt(MinecraftBridgeVars.Configuration.server.floodgate.maxOverruns),
             null,
             null,
             null,
@@ -134,8 +136,13 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
 
     @Override
     public void stopHandler(CommandSender sender) {
+        this.stopHandler(sender, true);
+    }
+
+    @Override
+    public void stopHandler(CommandSender sender, boolean saveLists) {
         if (getHandler() != null) {
-            getHandler().stop();
+            getHandler().stop(saveLists);
             if (sender == null) {
                 getLogger().log(Level.INFO, "WebServer stopped.");
             }
@@ -218,6 +225,9 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
             error = true;
         // resetTime
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.floodgate.resetTime, MinecraftBridgeVars.Configuration.server.floodgate.defaults.resetTime))
+            error = true;
+        // maxOverruns
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.server.floodgate.maxOverruns, MinecraftBridgeVars.Configuration.server.floodgate.defaults.maxOverruns))
             error = true;
         // enabled
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.enabled, MinecraftBridgeVars.Configuration.server.ssl.defaults.enabled))

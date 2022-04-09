@@ -26,16 +26,16 @@ public class WSCBridge extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                reload(sender, args);
-                return;
-            }
             if (args[0].equalsIgnoreCase("debug")) {
                 debug(sender);
                 return;
             }
         }
         if (args.length >= 1) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                reload(sender, args);
+                return;
+            }
             if (args[0].equalsIgnoreCase("whitelist")) {
                 whitelist(sender, args);
                 return;
@@ -57,8 +57,14 @@ public class WSCBridge extends Command {
             sender.sendMessage(new TextComponent("You don't have permission to do that."));
         }
         else {
+            boolean saveLists = false;
+            if (args.length == 2) {
+                if (args[1].equalsIgnoreCase("saveLists")) {
+                    saveLists = true;
+                }
+            }
             MinecraftBridgeBungee instance = MinecraftBridgeBungee.getInstance();
-            instance.stopHandler(sender);
+            instance.stopHandler(sender, saveLists);
             if (!instance.reloadConfiguration()) {
                 sender.sendMessage(new TextComponent("Could not reload Plugin. Error while loading 'config.xml'. Read logs for more intormation."));
                 return;
@@ -189,19 +195,19 @@ public class WSCBridge extends Command {
             sender.sendMessage(new TextComponent("Whitelist: Not enabled."));
         }
         else {
-            TextComponent whitelist = new TextComponent("Whitelist: Enabled.");
+            TextComponent whitelist = new TextComponent("Whitelist: Enabled. (List with '/wsclinker whitelist list')");
             whitelist.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/wsclinkerbungee whitelist list"));
             whitelist.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for more information.")));
             sender.sendMessage(whitelist);
         }
-        if (instance.getHandler().blacklist == null) {
-            sender.sendMessage(new TextComponent("Blacklist: Not enabled."));
-        }
-        else {
+        if (instance.getHandler().blacklistEnabled) {
             TextComponent blacklist = new TextComponent("Blacklist: Enabled.");
             blacklist.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/wsclinkerbungee blacklist list"));
             blacklist.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click for more information.")));
             sender.sendMessage(blacklist);
+        }
+        else {
+            sender.sendMessage(new TextComponent("Blacklist: Not enabled. (List with '/wsclinker blacklist list')"));
         }
         if (instance.getHandler().maxTries <= -1) {
             sender.sendMessage(new TextComponent("Floodgate disabled."));
@@ -210,6 +216,7 @@ public class WSCBridge extends Command {
             sender.sendMessage(new TextComponent("Floodgate:"));
             sender.sendMessage(new TextComponent("  maxTries: " + instance.getHandler().maxTries));
             sender.sendMessage(new TextComponent("  resetTime: " + instance.getHandler().resetTime));
+            sender.sendMessage(new TextComponent("  maxOverruns: " + instance.getHandler().maxOverruns));
         if (instance.getHandler().tries.isEmpty()) {
                 sender.sendMessage(new TextComponent("  Map: empty"));
             }

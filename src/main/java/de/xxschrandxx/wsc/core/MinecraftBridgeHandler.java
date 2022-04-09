@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.security.KeyManagementException;
@@ -62,8 +61,11 @@ public class MinecraftBridgeHandler {
     public ArrayList<InetAddress> whitelist;
 
     private String blacklistPath;
-    private boolean blacklistEnabled;
+    public boolean blacklistEnabled;
     public ArrayList<InetAddress> blacklist;
+
+    public Integer maxOverruns;
+    public HashMap<InetAddress, Integer> overruns = new HashMap<InetAddress, Integer>();
 
     public Integer maxTries;
     public HashMap<InetAddress, Integer> tries = new HashMap<InetAddress, Integer>();
@@ -125,12 +127,13 @@ public class MinecraftBridgeHandler {
      * Starts the webserver.
      * @return weather https server could be started
      */
-    public boolean start(String whitelistPath, String blacklistPath, Integer maxTries, Long resetTime, String keyStorePath, String storePassword, File dataFolder, String alias, String keyPassword) {
+    public boolean start(String whitelistPath, String blacklistPath, Integer maxTries, Long resetTime, Integer maxOverruns, String keyStorePath, String storePassword, File dataFolder, String alias, String keyPassword) {
 
         this.whitelistPath = whitelistPath;
         this.blacklistPath = blacklistPath;
         this.maxTries = maxTries;
         this.resetTime = resetTime;
+        this.maxOverruns = maxOverruns;
         this.dataFolder = dataFolder;
 
         loadLists();
@@ -260,7 +263,17 @@ public class MinecraftBridgeHandler {
      * Stops the webserver.
      */
     public void stop() {
-        this.saveLists();
+        this.stop(true);
+    }
+
+    /**
+     * Stops the webserver.
+     * @param saveLists Weather lists should be saved
+     */
+    public void stop(boolean saveLists) {
+        if (saveLists) {
+            this.saveLists();
+        }
         this.httpServer.stop(0);
     }
 
@@ -275,7 +288,7 @@ public class MinecraftBridgeHandler {
                 byte[] bytes = stream.readAllBytes();
                 String file = new String(bytes);
                 this.whitelist = new ArrayList<InetAddress>();
-                for (String rawAddress : file.split("\n:,: ,")) {
+                for (String rawAddress : file.split("\n")) {
                     String address = rawAddress.strip();
                     if (!address.isEmpty()) {
                         try {
@@ -309,7 +322,7 @@ public class MinecraftBridgeHandler {
                 byte[] bytes = stream.readAllBytes();
                 String file = new String(bytes);
                 this.blacklistEnabled = true;
-                for (String rawAddress : file.split("\n:,: ,")) {
+                for (String rawAddress : file.split("\n")) {
                     String address = rawAddress.strip();
                     if (!address.isEmpty()) {
                         try {
@@ -338,8 +351,15 @@ public class MinecraftBridgeHandler {
         if (this.whitelist != null) {
             if (!this.whitelist.isEmpty()) {
                 try (FileOutputStream stream = new FileOutputStream(this.whitelistPath)) {
+                    boolean first = true;
                     for (InetAddress address : this.whitelist) {
-                        stream.write(address.getHostName().getBytes(Charset.defaultCharset()));
+                        if (first) {
+                            stream.write(address.getHostAddress().getBytes());
+                            first = false;
+                        } else {
+                            stream.write("\n".getBytes());
+                            stream.write(address.getHostAddress().getBytes());
+                        }
                     }
                 }
                 catch(IOException | SecurityException e) {
@@ -358,8 +378,15 @@ public class MinecraftBridgeHandler {
         if (this.blacklistEnabled) {
             if (!this.blacklist.isEmpty()) {
                 try (FileOutputStream stream = new FileOutputStream(this.blacklistPath)) {
+                    boolean first = true;
                     for (InetAddress address : this.blacklist) {
-                        stream.write(address.getHostName().getBytes(Charset.defaultCharset()));
+                        if (first) {
+                            stream.write(address.getHostAddress().getBytes());
+                            first = false;
+                        } else {
+                            stream.write("\n".getBytes());
+                            stream.write(address.getHostAddress().getBytes());
+                        }
                     }
                 }
                 catch(IOException | SecurityException e) {
@@ -375,6 +402,11 @@ public class MinecraftBridgeHandler {
         }
     }
 
+    /**
+     * Check weather Exchange should be blocked from floodgate.
+     * @param exch Exchange to check.
+     * @return Result
+     */
     public Result authenticate(HttpExchange exch) {
         InetAddress address = exch.getRemoteAddress().getAddress();
 
@@ -388,7 +420,7 @@ public class MinecraftBridgeHandler {
             return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
         }
 
-        if (this.maxTries <= -1) {
+        if (this.maxTries <= 0) {
             return new Success(exch.getPrincipal());
         }
 
@@ -399,11 +431,24 @@ public class MinecraftBridgeHandler {
             if (resetTime.before(currentTime)) {
                 this.tries.put(address, 1);
                 this.times.put(address, currentTime.getTime());
+                this.overruns.put(address, 1);
             }
             else if (this.maxTries <= this.tries.get(address)) {
-                logger.log(Level.INFO, "WebServer: Adding " + address.toString() + " to blacklist.");
-                this.blacklist.add(address);
-                return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
+                if (this.maxOverruns > 0) {
+                    int overrun = this.overruns.getOrDefault(address, 0);
+                    if (this.maxOverruns >= overrun) {
+                        overrun++;
+                        logger.log(Level.WARNING, "WebServer: Setting " + overrun + " for " + address.toString() + ".");
+                        this.overruns.put(address, overrun);
+                    } else {
+                        logger.log(Level.WARNING, "WebServer: Adding " + address.toString() + " to blacklist.");
+                        this.blacklist.add(address);
+                        return new Failure(HttpURLConnection.HTTP_FORBIDDEN);
+                    }
+                }
+                long wait = (resetTime.getTime() - currentTime.getTime()) / 1000;
+                exch.getResponseHeaders().add("Retry-After", Long.toString(wait));
+                return new Failure(429);
             }
             else {
                 this.tries.put(address, (this.tries.get(address) + 1));

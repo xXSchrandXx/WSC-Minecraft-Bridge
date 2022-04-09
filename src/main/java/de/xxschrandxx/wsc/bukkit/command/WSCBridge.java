@@ -20,14 +20,14 @@ public class WSCBridge implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                return reload(sender, args);
-            }
             if (args[0].equalsIgnoreCase("debug")) {
                 return debug(sender);
             }
         }
         if (args.length >= 1) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                return reload(sender, args);
+            }
             if (args[0].equalsIgnoreCase("whitelist")) {
                 return whitelist(sender, args);
             }
@@ -48,8 +48,14 @@ public class WSCBridge implements CommandExecutor {
             sender.sendMessage("You don't have permission to do that.");
         }
         else {
+            boolean saveLists = false;
+            if (args.length == 2) {
+                if (args[1].equalsIgnoreCase("saveLists")) {
+                    saveLists = true;
+                }
+            }
             MinecraftBridgeBukkit instance = MinecraftBridgeBukkit.getInstance();
-            instance.stopHandler(sender);
+            instance.stopHandler(sender, saveLists);
             if (!instance.reloadConfiguration()) {
                 sender.sendMessage("Could not reload Plugin. Error while loading 'config.xml'. Read logs for more intormation.");
                 return true;
@@ -191,10 +197,7 @@ public class WSCBridge implements CommandExecutor {
                 sender.sendMessage("Whitelist: Enabled. (List with '/wsclinker whitelist list')");
             }
         }
-        if (instance.getHandler().blacklist == null) {
-            sender.sendMessage("Blacklist: Not enabled.");
-        }
-        else {
+        if (instance.getHandler().blacklistEnabled) {
             try {
                 Class.forName("org.bukkit.command.CommandSender.Spigot");
                 WSCBridgeSigot.sendBlacklistMessage(sender);
@@ -203,6 +206,9 @@ public class WSCBridge implements CommandExecutor {
                 sender.sendMessage("Blacklist: Enabled. (List with '/wsclinker blacklist list')");
             }
         }
+        else {
+            sender.sendMessage("Blacklist: Not enabled.");
+        }
         if (instance.getHandler().maxTries <= -1) {
             sender.sendMessage("Floodgate disabled.");
         }
@@ -210,6 +216,7 @@ public class WSCBridge implements CommandExecutor {
             sender.sendMessage("Floodgate:");
             sender.sendMessage("  maxTries: " + instance.getHandler().maxTries);
             sender.sendMessage("  resetTime: " + instance.getHandler().resetTime);
+            sender.sendMessage("  maxOverruns: " + instance.getHandler().maxOverruns);
         if (instance.getHandler().tries.isEmpty()) {
                 sender.sendMessage("  Map: empty");
             }

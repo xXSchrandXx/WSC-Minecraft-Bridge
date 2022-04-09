@@ -14,6 +14,8 @@ public interface IMinecraftBridge<S> {
 
     public void stopHandler(S sender);
 
+    public void stopHandler(S sender, boolean saveLists);
+
     public Object getConfiguration();
 
     public boolean reloadConfiguration();
