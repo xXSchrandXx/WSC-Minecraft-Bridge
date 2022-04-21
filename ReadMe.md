@@ -11,7 +11,7 @@ This plugin serves as the basis for the bridge between [xXSchrandXx/de.xxschrarn
 3. Start your server.
 4. Update the configuration in `plugins/wscbridge-{bukkit|spigot}`.
 5. Restart your server or use the `wscbridge{bukkit|spigot} reload` command.
-6. (Configure [WoltLab](#-woltlab) plugins)
+6. (Configure [WoltLab](#woltlab) plugins)
 ## Configration
 ```YAML
 # Server configuration
