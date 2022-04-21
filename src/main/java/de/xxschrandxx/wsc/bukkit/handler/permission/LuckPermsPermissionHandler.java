@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.xxschrandxx.wsc.bukkit.MinecraftBridgeBukkit;
@@ -43,28 +44,46 @@ public class LuckPermsPermissionHandler extends LuckPermsMethods {
             }
             else if (method == PermissionMethodEnum.getUserGroups) {
                 if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
-                    return getUserGroups(readRequestBody(exchange));
+                    return getUserGroups(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.getUsersGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return getUsersGroups(readRequestBodyListString(exchange));
                 }
             }
             else if (method == PermissionMethodEnum.addUserToGroup) {
                 if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
-                    return addUserToGroup(readRequestBody(exchange));
+                    return addUserToGroup(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.addUsersToGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return addUsersToGroups(readRequestBodyStringListStrings(exchange));
                 }
             }
             else if (method == PermissionMethodEnum.removeUserFromGroup) {
                 if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
-                    return removeUserFromGroup(readRequestBody(exchange));
+                    return removeUserFromGroup(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.removeUsersFromGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return removeUsersFromGroups(readRequestBodyStringListStrings(exchange));
                 }
             }
             else {
-                response.put("status", "Not found.");
-                response.put("statusCode", HttpURLConnection.HTTP_NOT_FOUND);
-                return response;
+                return this.notFound;
             }
         }
         catch (IOException e) {
             response.put("status", "Could not read request body.");
             response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
+            return response;
+        }
+        catch (JsonSyntaxException e) {
+            response.put("status", "Malformed JSON element.");
+            response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
             return response;
         }
         catch (JsonParseException e) {

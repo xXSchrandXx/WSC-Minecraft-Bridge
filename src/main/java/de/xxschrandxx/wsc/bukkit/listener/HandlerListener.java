@@ -29,15 +29,21 @@ public class HandlerListener implements Listener {
                 handler.addPasswordHandler("/permission", new LuckPermsPermissionHandler(PermissionMethodEnum.status));
                 handler.addPasswordHandler("/permission/groupList", new LuckPermsPermissionHandler(PermissionMethodEnum.groupList));
                 handler.addPasswordHandler("/permission/getUserGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.getUserGroups));
+                handler.addPasswordHandler("/permission/getUsersGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.getUsersGroups));
                 handler.addPasswordHandler("/permission/addUserToGroup", new LuckPermsPermissionHandler(PermissionMethodEnum.addUserToGroup));
+                handler.addPasswordHandler("/permission/addUsersToGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.addUsersToGroups));
                 handler.addPasswordHandler("/permission/removeUserFromGroup", new LuckPermsPermissionHandler(PermissionMethodEnum.removeUserFromGroup));
+                handler.addPasswordHandler("/permission/removeUsersFromGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
             }
             else {
                 instance.getLogger().log(Level.WARNING, "WebServer: No supportet Permissionplugin found.");
                 handler.addPasswordHandler("/permission", new DefaultPermissionHandler());
                 handler.addPasswordHandler("/permission/groupList", new DefaultPermissionHandler());
                 handler.addPasswordHandler("/permission/getUserGroups", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/getUsersGroups", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/addUsersToGroups", new DefaultPermissionHandler());
                 handler.addPasswordHandler("/permission/addUserToGroup", new DefaultPermissionHandler());
+                handler.addPasswordHandler("/permission/removeUsersFromGroups", new DefaultPermissionHandler());
                 handler.addPasswordHandler("/permission/removeUserFromGroup", new DefaultPermissionHandler());
             }
         }

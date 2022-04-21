@@ -105,6 +105,7 @@ public class MinecraftBridgeHandler {
      * @return @see HttpServer#createContext(String, HttpHandler)
      */
     public HttpContext addHandler(String path, HttpHandler handler) {
+        logger.log(Level.INFO, "WebServer: Adding password handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
         HttpContext context = httpServer.createContext(path, handler);
         context.setAuthenticator(this.authenticator);
         return context;
@@ -118,6 +119,7 @@ public class MinecraftBridgeHandler {
      * @return @see HttpServer#createContext(String, HttpHandler)
      */
     public HttpContext addPasswordHandler(String path, HttpHandler handler) {
+        logger.log(Level.INFO, "WebServer: Adding password handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
         HttpContext context = this.addHandler(path, handler);
         context.setAuthenticator(this.passwordAuthenticator);
         return context;
@@ -198,7 +200,7 @@ public class MinecraftBridgeHandler {
                 keyStorePath = this.dataFolder + File.separator + keyStorePath;
             }
         } catch (InvalidPathException e) {
-            logger.log(Level.SEVERE, "WebServer: Could not find Keystore: ",  e);
+            logger.log(Level.WARNING, "WebServer: Could not find Keystore: ",  e);
         }
 
         boolean startSuccessful = false;
@@ -242,17 +244,17 @@ public class MinecraftBridgeHandler {
 
             startSuccessful = true;
         } catch (IllegalStateException e) {
-            logger.log(Level.SEVERE, "WebServer: ", e);
+            logger.log(Level.WARNING, "WebServer: ", e);
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            logger.log(Level.SEVERE, "WebServer: SSL Context Initialization Failed.", e);
+            logger.log(Level.WARNING, "WebServer: SSL Context Initialization Failed.", e);
         } catch (EOFException e) {
-            logger.log(Level.SEVERE, "WebServer: EOF when reading Certificate file. (Check that the file is not empty)", e);
+            logger.log(Level.WARNING, "WebServer: EOF when reading Certificate file. (Check that the file is not empty)", e);
         } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "WebServer: No certificate file in " + keyStorePath + " not found!");
+            logger.log(Level.WARNING, "WebServer: No certificate file in " + keyStorePath + " not found!");
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "WebServer: ", e);
+            logger.log(Level.WARNING, "WebServer: ", e);
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
-            logger.log(Level.SEVERE, "WebServer: SSL Certificate loading Failed.", e);
+            logger.log(Level.WARNING, "WebServer: SSL Certificate loading Failed.", e);
         }
 
         return startSuccessful;
@@ -308,7 +310,7 @@ public class MinecraftBridgeHandler {
             }
         }
         catch (InvalidPathException e) {
-            logger.log(Level.SEVERE, "WebServer: Could not find whitelist: ",  e);
+            logger.log(Level.WARNING, "WebServer: Could not find whitelist: ",  e);
         }
 
         // load blacklist
@@ -342,7 +344,7 @@ public class MinecraftBridgeHandler {
             }
         }
         catch (InvalidPathException e) {
-            logger.log(Level.SEVERE, "WebServer: Could not find blacklist: ",  e);
+            logger.log(Level.WARNING, "WebServer: Could not find blacklist: ",  e);
         }
     }
 

@@ -8,30 +8,21 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import de.xxschrandxx.wsc.core.AbstractHttpHandler;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 
-public abstract class LuckPermsMethods extends AbstractHttpHandler {
-
-    public LuckPermsMethods(LuckPerms api) {
-        this.api = api;
-    }
+public abstract class LuckPermsMethods extends AbstractPermsMethods {
 
     protected LuckPerms api;
 
-    public HashMap<String, Object> status() {
-        HashMap<String, Object> response = new HashMap<String, Object>();
-        response.put("status", "OK");
-        response.put("statusCode", HttpURLConnection.HTTP_OK);
-        response.put("plugin", "LuckPerms");
-        response.put("version", this.api.getPluginMetadata().getVersion());
-        response.put("apiVersion", this.api.getPluginMetadata().getApiVersion());
-        return response;
+    public LuckPermsMethods(LuckPerms api) {
+        this.api = api;
+        this.plugin = this.api.getPluginMetadata().getVersion();
     }
 
+    @Override
     public HashMap<String, Object> groupList() {
         HashMap<String, Object> response = new HashMap<String, Object>();
         this.api.getGroupManager().loadAllGroups().join();
@@ -46,6 +37,7 @@ public abstract class LuckPermsMethods extends AbstractHttpHandler {
         return response;
     }
 
+    @Override
     public HashMap<String, Object> getUserGroups(HashMap<String, String> requestBody) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         if (!requestBody.containsKey("uuid")) {
@@ -83,6 +75,7 @@ public abstract class LuckPermsMethods extends AbstractHttpHandler {
         return response;
     }
 
+    @Override
     public HashMap<String, Object> addUserToGroup(HashMap<String, String> requestBody) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         if (!requestBody.containsKey("uuid")) {
@@ -133,6 +126,7 @@ public abstract class LuckPermsMethods extends AbstractHttpHandler {
         return response;
     }
 
+    @Override
     public HashMap<String, Object> removeUserFromGroup(HashMap<String, String> requestBody) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         if (!requestBody.containsKey("uuid")) {

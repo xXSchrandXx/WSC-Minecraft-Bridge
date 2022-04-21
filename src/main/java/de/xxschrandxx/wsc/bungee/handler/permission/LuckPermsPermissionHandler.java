@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import de.xxschrandxx.wsc.bungee.MinecraftBridgeBungee;
@@ -32,24 +33,47 @@ public class LuckPermsPermissionHandler extends LuckPermsMethods {
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {
             if (method == PermissionMethodEnum.status) {
-                return status();
+                if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
+                    return status();
+                }
             }
             else if (method == PermissionMethodEnum.groupList) {
-                return groupList();
+                if (exchange.getRequestMethod().equalsIgnoreCase("get")) {
+                    return groupList();
+                }
             }
             else if (method == PermissionMethodEnum.getUserGroups) {
-                return getUserGroups(readRequestBody(exchange));
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return getUserGroups(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.getUsersGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return getUsersGroups(readRequestBodyListString(exchange));
+                }
             }
             else if (method == PermissionMethodEnum.addUserToGroup) {
-                return addUserToGroup(readRequestBody(exchange));
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return addUserToGroup(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.addUsersToGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return addUsersToGroups(readRequestBodyStringListStrings(exchange));
+                }
             }
             else if (method == PermissionMethodEnum.removeUserFromGroup) {
-                return removeUserFromGroup(readRequestBody(exchange));
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return removeUserFromGroup(readRequestBodyString(exchange));
+                }
+            }
+            else if (method == PermissionMethodEnum.removeUsersFromGroups) {
+                if (exchange.getRequestMethod().equalsIgnoreCase("post")) {
+                    return removeUsersFromGroups(readRequestBodyStringListStrings(exchange));
+                }
             }
             else {
-                response.put("status", "Not found.");
-                response.put("statusCode", HttpURLConnection.HTTP_NOT_FOUND);
-                return response;
+                return this.notFound;
             }
         }
         catch (IOException e) {
@@ -57,10 +81,18 @@ public class LuckPermsPermissionHandler extends LuckPermsMethods {
             response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
             return response;
         }
+        catch (JsonSyntaxException e) {
+            response.put("status", "Malformed JSON element.");
+            response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+            return response;
+        }
         catch (JsonParseException e) {
             response.put("status", "Could parse JSON.");
             response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
             return response;
         }
+        response.put("status", "Method Not Allowed.");
+        response.put("statusCode", HttpURLConnection.HTTP_BAD_METHOD);
+        return response;
     }
 }

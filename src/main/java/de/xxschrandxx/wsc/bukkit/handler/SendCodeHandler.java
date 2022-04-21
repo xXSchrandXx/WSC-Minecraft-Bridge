@@ -23,7 +23,7 @@ public class SendCodeHandler extends AbstractBukkitHttpHandler {
             return response;
         }
         try {
-            HashMap<String, String> request = readRequestBody(exchange);
+            HashMap<String, String> request = readRequestBodyString(exchange);
             if (!request.containsKey("uuid")) {
                 response.put("status", "No uuid set.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);

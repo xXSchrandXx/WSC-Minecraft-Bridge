@@ -20,7 +20,7 @@ public class CommandHandler extends AbstractBungeeHttpHandler {
             return response;
         }
         try {
-            HashMap<String, String> request = readRequestBody(exchange);
+            HashMap<String, String> request = readRequestBodyString(exchange);
             if (!request.containsKey("command")) {
                 response.put("status", "No command found.");
                 response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);

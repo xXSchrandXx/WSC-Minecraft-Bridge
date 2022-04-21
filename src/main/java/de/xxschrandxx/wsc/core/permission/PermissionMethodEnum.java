@@ -1,5 +1,5 @@
 package de.xxschrandxx.wsc.core.permission;
 
 public enum PermissionMethodEnum {
-    status, groupList, getUserGroups, addUserToGroup, removeUserFromGroup
+    status, groupList, getUserGroups, getUsersGroups, addUserToGroup, addUsersToGroups, removeUserFromGroup, removeUsersFromGroups
 }

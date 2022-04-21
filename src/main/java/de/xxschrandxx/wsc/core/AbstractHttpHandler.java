@@ -20,6 +20,8 @@ public abstract class AbstractHttpHandler implements HttpHandler {
 
     protected final Gson gson = new Gson();
 
+    protected final Type typeListString = new TypeToken<List<String>>(){}.getType();
+
     protected final Type typeStringObject = new TypeToken<HashMap<String, Object>>(){}.getType();
     protected final Type typeStringString = new TypeToken<HashMap<String, String>>(){}.getType();
     protected final Type typeStringInteger = new TypeToken<HashMap<String, Integer>>(){}.getType();
@@ -37,16 +39,50 @@ public abstract class AbstractHttpHandler implements HttpHandler {
         String json = this.gson.toJson(response);
         byte[] jsonBytes = json.getBytes();
 
+        if (!response.containsKey("statusCode")) {
+            throw new IOException("WebServer: Reponse does not contain statusCode.");
+        }
+        if (!(response.get("statusCode") instanceof Integer)) {
+            throw new IOException("WebServer: Response statusCode is not an integer.");
+        }
+        if (!response.containsKey("status")) {
+            throw new IOException("WebServer: Reponse does not contain status.");
+        }
+        if (!(response.get("status") instanceof String)) {
+            throw new IOException("WebServer: Response status is not a string.");
+        }
+
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders((int) response.get("statusCode"), jsonBytes.length);
         exchange.getResponseBody().write(jsonBytes);
         exchange.close();
     }
 
-    protected HashMap<String, String> readRequestBody(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException {
+    protected List<String> readRequestBodyListString(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException { 
+        byte[] requestBytes = exchange.getRequestBody().readAllBytes();
+        String requestString = new String(requestBytes, StandardCharsets.UTF_8);
+        List<String> request = this.gson.fromJson(requestString, typeListString);
+        return request;
+    }
+
+    protected HashMap<String, Object> readRequestBodyObject(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException {
+        byte[] requestBytes = exchange.getRequestBody().readAllBytes();
+        String requestString = new String(requestBytes, StandardCharsets.UTF_8);
+        HashMap<String, Object> request = this.gson.fromJson(requestString, typeStringObject);
+        return request;
+    }
+
+    protected HashMap<String, String> readRequestBodyString(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException {
         byte[] requestBytes = exchange.getRequestBody().readAllBytes();
         String requestString = new String(requestBytes, StandardCharsets.UTF_8);
         HashMap<String, String> request = this.gson.fromJson(requestString, typeStringString);
+        return request;
+    }
+
+    protected HashMap<String, List<String>> readRequestBodyStringListStrings(HttpExchange exchange) throws IOException, JsonParseException, JsonSyntaxException {
+        byte[] requestBytes = exchange.getRequestBody().readAllBytes();
+        String requestString = new String(requestBytes, StandardCharsets.UTF_8);
+        HashMap<String, List<String>> request = this.gson.fromJson(requestString, typeStringListStrings);
         return request;
     }
 
