@@ -62,21 +62,20 @@ public class MyHandler extends AbstractHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
+
+        // Checking method
         if (!exchange.getRequestMethod().equalsIgnoreCase("post")) {
             response.put("status", "Method not allowed.");
             response.put("statusCode", HttpURLConnection.HTTP_BAD_METHOD);
             return response;
         }
+        // Reading request
         try {
             HashMap<String, String> request = readRequestBodyString(exchange);
             // Validate request
         }
         catch (JsonSyntaxException e) {
             response.put("status", "Could not parse JSON.");
-            response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
-        }
-        catch (IllegalArgumentException e) {
-            response.put("status", "Could not parse UUID.");
             response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
         }
         catch (IOException e) {
