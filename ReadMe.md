@@ -62,7 +62,28 @@ public class MyHandler extends AbstractHttpHandler {
     @Override
     public HashMap<String, Object> run(HttpExchange exchange) {
         HashMap<String, Object> response = new HashMap<String, Object>();
-
+        if (!exchange.getRequestMethod().equalsIgnoreCase("post")) {
+            response.put("status", "Method not allowed.");
+            response.put("statusCode", HttpURLConnection.HTTP_BAD_METHOD);
+            return response;
+        }
+        try {
+            HashMap<String, String> request = readRequestBodyString(exchange);
+            // Validate request
+        }
+        catch (JsonSyntaxException e) {
+            response.put("status", "Could not parse JSON.");
+            response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+        }
+        catch (IllegalArgumentException e) {
+            response.put("status", "Could not parse UUID.");
+            response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+        }
+        catch (IOException e) {
+            response.put("status", "Internal Server Error.");
+            response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
+            e.printStackTrace();
+        }
         // Do stuff.
 
         // A response has to have `status` and `statusCode` set!
@@ -71,6 +92,7 @@ public class MyHandler extends AbstractHttpHandler {
 
         return response;
     }
+}
 ```
 Example: [Bukkit/Spigot](https://github.com/xXSchrandXx/WSC-Minecraft-Bridge/blob/main/src/main/java/de/xxschrandxx/wsc/bukkit/handler/StatusHandler.java) | [BungeeCord](https://github.com/xXSchrandXx/WSC-Minecraft-Bridge/blob/main/src/main/java/de/xxschrandxx/wsc/bungee/handler/StatusHandler.java)
 ## Adding a Handler
