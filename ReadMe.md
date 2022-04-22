@@ -69,10 +69,24 @@ public class MyHandler extends AbstractHttpHandler {
             response.put("statusCode", HttpURLConnection.HTTP_BAD_METHOD);
             return response;
         }
-        // Reading request
+
         try {
+            // Reading request
             HashMap<String, String> request = readRequestBodyString(exchange);
+
             // Validate request
+            if (!request.containsKey("foo")) {
+                response.put("status", "foo not set.");
+                response.put("statusCode", HttpURLConnection.HTTP_BAD_REQUEST);
+                return response;
+            }
+
+            // Do stuff.
+            response.put("bar", "foo")
+
+            // A response has to have `status` and `statusCode` set!
+            response.put("status", "OK");
+            response.put("statusCode", HttpURLConnection.HTTP_OK);
         }
         catch (JsonSyntaxException e) {
             response.put("status", "Could not parse JSON.");
@@ -83,11 +97,6 @@ public class MyHandler extends AbstractHttpHandler {
             response.put("statusCode", HttpURLConnection.HTTP_INTERNAL_ERROR);
             e.printStackTrace();
         }
-        // Do stuff.
-
-        // A response has to have `status` and `statusCode` set!
-        response.put("status", "OK");
-        response.put("statusCode", HttpURLConnection.HTTP_OK);
 
         return response;
     }
