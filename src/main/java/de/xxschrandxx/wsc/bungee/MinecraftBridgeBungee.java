@@ -242,6 +242,8 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
         // password
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.password, MinecraftBridgeVars.Configuration.server.defaults.password))
             error = true;
+
+        // Floodgate
         // whitelistPath
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.whitelistPath, MinecraftBridgeVars.Configuration.server.defaults.whitelistPath))
             error = true;
@@ -257,6 +259,8 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
         // maxOverruns
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.floodgate.maxOverruns, MinecraftBridgeVars.Configuration.server.floodgate.defaults.maxOverruns))
             error = true;
+
+        // SSL
         // enabled
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.enabled, MinecraftBridgeVars.Configuration.server.ssl.defaults.enabled))
             error = true;
@@ -272,8 +276,14 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
         // keyPassword
         if (checkConfiguration(MinecraftBridgeVars.Configuration.server.ssl.keyPassword, MinecraftBridgeVars.Configuration.server.ssl.defaults.keyPassword))
             error = true;
-        // permission
-        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission, MinecraftBridgeVars.Configuration.modules.defaults.permission))
+
+        // Modules
+        // Permission Module
+        // enabled
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission.enabled, MinecraftBridgeVars.Configuration.modules.permission.defaults.enabled))
+            error = true;
+        // plugin
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission.plugin, MinecraftBridgeVars.Configuration.modules.permission.defaults.plugin))
             error = true;
 
         // end config data

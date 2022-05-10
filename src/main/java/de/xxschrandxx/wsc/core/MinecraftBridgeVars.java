@@ -1,5 +1,7 @@
 package de.xxschrandxx.wsc.core;
 
+import de.xxschrandxx.wsc.core.permission.PermissionPlugin;
+
 public final class MinecraftBridgeVars {
     public final static class Configuration {
         public final static class server {
@@ -57,15 +59,16 @@ public final class MinecraftBridgeVars {
             }
         }
         public final static class modules {
-            /** weather permission module should be enabled */
-            public final static String permission = "modules.permission";
-            public final static class defaults {
-                public final static Boolean permission = false;
+            public final static class permission {
+                /** weather permission module should be enabled */
+                public final static String enabled = "modules.permission.enabled";
+                /** permission plugin name */
+                public final static String plugin = "modules.permission.";
+                public final static class defaults {
+                    public final static Boolean enabled = false;
+                    public final static PermissionPlugin plugin = PermissionPlugin.LuckPerms;
+                }
             }
         }
-    }
-
-    public class HttpStatusCodes {
-
     }
 }
