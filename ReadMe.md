@@ -50,8 +50,10 @@ server:
     keyPassword: MySuperSecretPassword
 # Module configuration
 modules:
-  # Weahter the permission module should be enabled
-  permission: false
+  # Groupsync module
+  groupsync:
+    enabled: false
+    plugin: LuckPerms
 
 ```
 # API

@@ -15,6 +15,7 @@ import de.xxschrandxx.wsc.bukkit.listener.*;
 import de.xxschrandxx.wsc.core.IMinecraftBridge;
 import de.xxschrandxx.wsc.core.MinecraftBridgeHandler;
 import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
+import de.xxschrandxx.wsc.core.permission.PermissionPlugin;
 
 public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridge<CommandSender> {
 
@@ -252,10 +253,10 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
         // Modules
         // Permission Module
         // enabled
-        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission.enabled, MinecraftBridgeVars.Configuration.modules.permission.defaults.enabled))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.groupsync.enabled, MinecraftBridgeVars.Configuration.modules.groupsync.defaults.enabled))
             error = true;
         // plugin
-        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.permission.plugin, MinecraftBridgeVars.Configuration.modules.permission.defaults.plugin))
+        if (checkConfiguration(MinecraftBridgeVars.Configuration.modules.groupsync.plugin, MinecraftBridgeVars.Configuration.modules.groupsync.defaults.plugin))
             error = true;
 
         // end config data
@@ -271,12 +272,25 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
 
     @Override
     public boolean checkConfiguration(String path, Object def) {
-        if (getConfiguration().get(path) == null) {
+        Object o = getConfiguration().get(path);
+        if (o == null) {
             getLogger().log(Level.WARNING, path + " is not set. Resetting it.");
             getConfiguration().set(path, def);
             return true;
         }
         else {
+            // Check valid enums
+            if (def instanceof PermissionPlugin) {
+                try {
+                    PermissionPlugin.valueOf((String) o);
+                }
+                catch (IllegalArgumentException | NullPointerException e) {
+                    getLogger().log(Level.WARNING, path + " is wrong. Resetting it.");
+                    getConfiguration().set(path, def.toString());
+                    return true;
+                }
+            }
+
             return false;
         }
     }

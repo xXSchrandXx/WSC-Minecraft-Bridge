@@ -24,8 +24,8 @@ public class HandlerListener implements Listener {
         handler.addPasswordHandler("/list", new UserListHandler());
         handler.addPasswordHandler("/command", new CommandHandler());
         handler.addPasswordHandler("/sendCode", new SendCodeHandler());
-        if (instance.getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.permission.enabled)) {
-            PermissionPlugin plugin = PermissionPlugin.valueOf(instance.getConfiguration().getString(MinecraftBridgeVars.Configuration.modules.permission.plugin));
+        if (instance.getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.groupsync.enabled)) {
+            PermissionPlugin plugin = PermissionPlugin.valueOf(instance.getConfiguration().getString(MinecraftBridgeVars.Configuration.modules.groupsync.plugin));
             switch (plugin) {
                 case LuckPerms:
                     if (instance.getProxy().getPluginManager().getPlugin(plugin.toString()) != null) {

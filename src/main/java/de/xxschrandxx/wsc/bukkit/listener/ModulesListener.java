@@ -10,7 +10,7 @@ import de.xxschrandxx.wsc.core.MinecraftBridgeVars;
 public class ModulesListener implements Listener {
     @EventHandler
     public void onStatus(MinecraftBridgeModulesEvent e) {
-        if (MinecraftBridgeBukkit.getInstance().getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.permission.enabled))
+        if (MinecraftBridgeBukkit.getInstance().getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.groupsync.enabled))
             e.addModule("permission");
     }
 }

@@ -59,11 +59,11 @@ public final class MinecraftBridgeVars {
             }
         }
         public final static class modules {
-            public final static class permission {
-                /** weather permission module should be enabled */
-                public final static String enabled = "modules.permission.enabled";
+            public final static class groupsync {
+                /** weather groupsync module should be enabled */
+                public final static String enabled = "modules.groupsync.enabled";
                 /** permission plugin name */
-                public final static String plugin = "modules.permission.";
+                public final static String plugin = "modules.groupsync.plugin";
                 public final static class defaults {
                     public final static Boolean enabled = false;
                     public final static PermissionPlugin plugin = PermissionPlugin.LuckPerms;

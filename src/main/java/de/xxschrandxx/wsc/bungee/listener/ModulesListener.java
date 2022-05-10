@@ -9,7 +9,7 @@ import net.md_5.bungee.event.EventHandler;
 public class ModulesListener implements Listener {
     @EventHandler
     public void onStatus(MinecraftBridgeModulesEvent e) {
-        if (MinecraftBridgeBungee.getInstance().getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.permission.enabled))
+        if (MinecraftBridgeBungee.getInstance().getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.modules.groupsync.enabled))
             e.addModule("permission");
     }
 }

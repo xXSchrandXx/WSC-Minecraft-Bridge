@@ -105,7 +105,7 @@ public class MinecraftBridgeHandler {
      * @return @see HttpServer#createContext(String, HttpHandler)
      */
     public HttpContext addHandler(String path, HttpHandler handler) {
-        logger.log(Level.INFO, "WebServer: Adding password handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
+        logger.log(Level.INFO, "WebServer: Adding handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
         HttpContext context = httpServer.createContext(path, handler);
         context.setAuthenticator(this.authenticator);
         return context;
@@ -120,7 +120,7 @@ public class MinecraftBridgeHandler {
      */
     public HttpContext addPasswordHandler(String path, HttpHandler handler) {
         logger.log(Level.INFO, "WebServer: Adding password handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
-        HttpContext context = this.addHandler(path, handler);
+        HttpContext context = httpServer.createContext(path, handler);
         context.setAuthenticator(this.passwordAuthenticator);
         return context;
     }
