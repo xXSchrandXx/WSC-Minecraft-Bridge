@@ -300,16 +300,13 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
     @Override
     public boolean checkConfiguration(String path, Object def) {
         Object o = getConfiguration().get(path);
-        if (o == null) {
-            getLogger().log(Level.WARNING, path + " is not set. Resetting it.");
-            getConfiguration().set(path, def);
-            return true;
-        }
-        else {
-            // Check valid enums
-            if (def instanceof PermissionPlugin) {
+
+        // Check valid enums
+        if (def instanceof PermissionPlugin) {
+            if (o != null) {
                 try {
                     PermissionPlugin.valueOf((String) o);
+                    return false;
                 }
                 catch (IllegalArgumentException | NullPointerException e) {
                     getLogger().log(Level.WARNING, path + " is wrong. Resetting it.");
@@ -317,7 +314,19 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridge<Co
                     return true;
                 }
             }
+            else {
+                getLogger().log(Level.WARNING, path + " is not set. Resetting it.");
+                getConfiguration().set(path, def.toString());
+                return true;
+            }
+        }
 
+        if (o == null) {
+            getLogger().log(Level.WARNING, path + " is not set. Resetting it.");
+            getConfiguration().set(path, def);
+            return true;
+        }
+        else {
             return false;
         }
     }
