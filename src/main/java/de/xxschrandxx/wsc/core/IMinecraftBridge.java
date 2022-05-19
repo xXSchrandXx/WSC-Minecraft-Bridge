@@ -1,6 +1,6 @@
 package de.xxschrandxx.wsc.core;
 
-// TODO
+// TODO finish interface
 public interface IMinecraftBridge<S> {
     public static IMinecraftBridge<?> getInstance() {
         return null;
