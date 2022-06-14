@@ -52,10 +52,10 @@ public class MessageHandler extends AbstractBukkitHttpHandler {
                 return response;
             }
             try {
-                Class.forName("org.bukkit.entity.Player.Spigot");
+                Class.forName(Player.Spigot.class.getName());
                 MessageHandlerSpigot.sendMessage(player, request);
             }
-            catch (ClassNotFoundException e) {
+            catch (LinkageError | ClassNotFoundException e) {
                 player.sendMessage(request.get("message"));
             }
             response.put("status", "OK.");
