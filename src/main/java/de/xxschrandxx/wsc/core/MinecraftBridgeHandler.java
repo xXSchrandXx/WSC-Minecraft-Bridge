@@ -83,8 +83,8 @@ public class MinecraftBridgeHandler {
      * @param useSSL weather ssl should be used.
      * @param user the user for the {@link BasicAuthenticator}
      * @param password the password for the {@link BasicAuthenticator}
-     * @throws BindException @see {@link HttpServer#create(InetSocketAddress, int)}
-     * @throws IOException @see {@link HttpServer#create(InetSocketAddress, int)}
+     * @throws BindException {@link HttpServer#create(InetSocketAddress, int)}
+     * @throws IOException {@link HttpServer#create(InetSocketAddress, int)}
      */
     public MinecraftBridgeHandler(Logger logger, InetSocketAddress address, boolean useSSL, String user, String password) throws BindException, IOException {
         this.logger = logger;
@@ -102,7 +102,7 @@ public class MinecraftBridgeHandler {
      * Automativally sets the {@link Floodgate}
      * @param path url path to listen on.
      * @param handler handler to add.
-     * @return @see HttpServer#createContext(String, HttpHandler)
+     * @return {@link HttpServer#createContext(String, HttpHandler)}
      */
     public HttpContext addHandler(String path, HttpHandler handler) {
         logger.log(Level.INFO, "WebServer: Adding handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
@@ -116,7 +116,7 @@ public class MinecraftBridgeHandler {
      * Automativally sets the {@link PasswordAuthenticator}
      * @param path url path to listen on.
      * @param handler handler to add.
-     * @return @see HttpServer#createContext(String, HttpHandler)
+     * @return {@link HttpServer#createContext(String, HttpHandler)}
      */
     public HttpContext addPasswordHandler(String path, HttpHandler handler) {
         logger.log(Level.INFO, "WebServer: Adding password handler for path: \"" + path + "\" Handler: \"" + handler.getClass().getName() + "\"");
