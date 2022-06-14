@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 
 import de.xxschrandxx.wsc.bukkit.api.AbstractBukkitHttpHandler;
 
@@ -33,10 +34,10 @@ public class BroadcastHandler extends AbstractBukkitHttpHandler {
                 return response;
             }
             try {
-                Class.forName("org.bukkit.Server.Spigot");
+                Class.forName(Server.Spigot.class.getName());
                 BroadcastHandlerSpigot.broadcast(request);
             }
-            catch (ClassNotFoundException e) {
+            catch (LinkageError | ClassNotFoundException e) {
                 Bukkit.broadcastMessage(request.get("message"));
             }
             response.put("status", "OK.");
