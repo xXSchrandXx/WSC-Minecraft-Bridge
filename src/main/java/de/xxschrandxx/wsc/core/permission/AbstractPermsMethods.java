@@ -57,7 +57,7 @@ public abstract class AbstractPermsMethods extends AbstractHttpHandler {
     }
 
     /**
-     * TODO
+     * TODO finish interface
      * @param requestBody
      * @return
      */
@@ -102,7 +102,7 @@ public abstract class AbstractPermsMethods extends AbstractHttpHandler {
     }
 
     /**
-     * TODO
+     * TODO finish interface
      * @param requestBody
      * @return
      */
@@ -151,7 +151,7 @@ public abstract class AbstractPermsMethods extends AbstractHttpHandler {
         return this.notFound;
     }
     /**
-     * TODO
+     * TODO finish interface
      * @param requestBody
      * @return
      */
