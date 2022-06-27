@@ -42,6 +42,19 @@ public class HandlerListener implements Listener {
                         handler.addPasswordHandler("/permission/removeUsersFromGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
                     }
                     return;
+                case CloudNet:
+                    if (instance.getServer().getPluginManager().getPlugin(plugin.getName()) != null) {
+                        instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin LuckPerms found. Using it.");
+                        handler.addPasswordHandler("/permission", new CloudNetPermissionHandler(PermissionMethodEnum.status));
+                        handler.addPasswordHandler("/permission/groupList", new CloudNetPermissionHandler(PermissionMethodEnum.groupList));
+                        handler.addPasswordHandler("/permission/getUserGroups", new CloudNetPermissionHandler(PermissionMethodEnum.getUserGroups));
+                        handler.addPasswordHandler("/permission/getUsersGroups", new CloudNetPermissionHandler(PermissionMethodEnum.getUsersGroups));
+                        handler.addPasswordHandler("/permission/addUserToGroup", new CloudNetPermissionHandler(PermissionMethodEnum.addUserToGroup));
+                        handler.addPasswordHandler("/permission/addUsersToGroups", new CloudNetPermissionHandler(PermissionMethodEnum.addUsersToGroups));
+                        handler.addPasswordHandler("/permission/removeUserFromGroup", new CloudNetPermissionHandler(PermissionMethodEnum.removeUserFromGroup));
+                        handler.addPasswordHandler("/permission/removeUsersFromGroups", new CloudNetPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
+                    }
+                    return;
             }
             instance.getLogger().log(Level.WARNING, "WebServer: No supportet Permissionplugin found.");
             handler.addPasswordHandler("/permission", new DefaultPermissionHandler());

@@ -6,6 +6,12 @@ public enum PermissionPlugin {
      * @see <a href="https://luckperms.net/">LuckPerms</a>
      */
     LuckPerms("LuckPerms"),
+    /**
+     * CloudNet
+     * @see <a href="https://cloudnetservice.eu/">CloudNetService</a>
+     */
+    CloudNet("CloudNet-CloudPerms")
+    ;
 
     PermissionPlugin(String name) {
         this.pluginName = name;
