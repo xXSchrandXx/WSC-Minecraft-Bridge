@@ -30,7 +30,7 @@ public class HandlerListener implements Listener {
             PermissionPlugin plugin = PermissionPlugin.valueOf(instance.getConfiguration().getString(MinecraftBridgeVars.Configuration.modules.groupsync.plugin));
             switch (plugin) {
                 case LuckPerms:
-                    if (instance.getProxy().getPluginManager().getPlugin(plugin.toString()) != null) {
+                    if (instance.getProxy().getPluginManager().getPlugin(plugin.getName()) != null) {
                         instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin LuckPerms found. Using it.");
                         handler.addPasswordHandler("/permission", new LuckPermsPermissionHandler(PermissionMethodEnum.status));
                         handler.addPasswordHandler("/permission/groupList", new LuckPermsPermissionHandler(PermissionMethodEnum.groupList));

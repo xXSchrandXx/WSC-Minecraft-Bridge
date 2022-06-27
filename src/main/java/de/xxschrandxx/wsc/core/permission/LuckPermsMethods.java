@@ -19,7 +19,8 @@ public abstract class LuckPermsMethods extends AbstractPermsMethods {
 
     public LuckPermsMethods(LuckPerms api) {
         this.api = api;
-        this.plugin = this.api.getPluginMetadata().getVersion();
+        this.plugin = "LuckPerms";
+        this.version = this.api.getPluginMetadata().getVersion();
     }
 
     @Override
