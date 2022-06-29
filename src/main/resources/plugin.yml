@@ -5,7 +5,7 @@ author: xXSchrandXx
 description: WSC-Minecraft-Bridge
 api-version: 1.13
 load: STARTUP
-softdepend: [LuckPerms, SkinsRestorer]
+softdepend: [CloudNet-Perms, LuckPerms, Vault]
 
 commands:
   wscbridge:

@@ -3,7 +3,7 @@ main: ${project.groupId}.bungee.MinecraftBridgeBungee
 version: ${project.version}
 author: xXSchrandXx
 description: WSC-Minecraft-Bridge
-softdepend: [LuckPerms, SkinsRestorer]
+softdepend: [CloudNet-Perms, LuckPerms]
 
 commands:
   wscbridgebungee:
