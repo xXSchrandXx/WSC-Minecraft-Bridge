@@ -170,14 +170,6 @@
 									<pattern>org.bstats</pattern>
 									<shadedPattern>de.xxschrandxx.wsc.api.org.bstats</shadedPattern>
 								</relocation>
-								<relocation>
-									<pattern>com.sun</pattern>
-									<shadedPattern>de.xxschrandxx.wsc.api.com.sun</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>sun.net</pattern>
-									<shadedPattern>de.xxschrandxx.wsc.api.sun.net</shadedPattern>
-								</relocation>
 							</relocations>
 							<artifactSet>
 								<includes>
