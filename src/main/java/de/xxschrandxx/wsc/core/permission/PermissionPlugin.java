@@ -13,6 +13,7 @@ public enum PermissionPlugin {
     CloudNet("CloudNet-CloudPerms"),
     /**
      * Vault
+     * Still needs a plugin wich supports groups.
      * @see <a href="https://github.com/MilkBowl/VaultAPI">VaultAPI</a>
      */
     Vault("Vault")

@@ -31,7 +31,7 @@ public class HandlerListener implements Listener {
             switch (plugin) {
                 case LuckPerms:
                     if (instance.getProxy().getPluginManager().getPlugin(plugin.getName()) != null) {
-                        instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin LuckPerms found. Using it.");
+                        instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin " + plugin.getName() + " found. Using it.");
                         handler.addPasswordHandler("/permission", new LuckPermsPermissionHandler(PermissionMethodEnum.status));
                         handler.addPasswordHandler("/permission/groupList", new LuckPermsPermissionHandler(PermissionMethodEnum.groupList));
                         handler.addPasswordHandler("/permission/getUserGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.getUserGroups));
@@ -40,11 +40,11 @@ public class HandlerListener implements Listener {
                         handler.addPasswordHandler("/permission/addUsersToGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.addUsersToGroups));
                         handler.addPasswordHandler("/permission/removeUserFromGroup", new LuckPermsPermissionHandler(PermissionMethodEnum.removeUserFromGroup));
                         handler.addPasswordHandler("/permission/removeUsersFromGroups", new LuckPermsPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
+                        return;
                     }
-                    return;
                 case CloudNet:
                     if (instance.getProxy().getPluginManager().getPlugin(plugin.getName()) != null) {
-                        instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin CloudNet found. Using it.");
+                        instance.getLogger().log(Level.INFO, "WebServer: Permissionplugin " + plugin.getName() + " found. Using it.");
                         handler.addPasswordHandler("/permission", new CloudNetPermissionHandler(PermissionMethodEnum.status));
                         handler.addPasswordHandler("/permission/groupList", new CloudNetPermissionHandler(PermissionMethodEnum.groupList));
                         handler.addPasswordHandler("/permission/getUserGroups", new CloudNetPermissionHandler(PermissionMethodEnum.getUserGroups));
@@ -53,11 +53,10 @@ public class HandlerListener implements Listener {
                         handler.addPasswordHandler("/permission/addUsersToGroups", new CloudNetPermissionHandler(PermissionMethodEnum.addUsersToGroups));
                         handler.addPasswordHandler("/permission/removeUserFromGroup", new CloudNetPermissionHandler(PermissionMethodEnum.removeUserFromGroup));
                         handler.addPasswordHandler("/permission/removeUsersFromGroups", new CloudNetPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
+                        return;
                     }
-                    return;
                 case Vault:
-                    instance.getLogger().log(Level.WARNING, "WebServer: Vault is not supported for BungeeCord.");
-                    return;
+                    instance.getLogger().log(Level.WARNING, "WebServer: " + plugin.getName() + " is not supported for BungeeCord.");
             }
             instance.getLogger().log(Level.WARNING, "WebServer: No supportet Permissionplugin found.");
             handler.addPasswordHandler("/permission", new DefaultPermissionHandler());
