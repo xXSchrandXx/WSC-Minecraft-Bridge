@@ -34,6 +34,11 @@
 			<id>cloudnet-releases</id>
 			<url>https://repo.cloudnetservice.eu/repository/releases/</url>
 		</repository>
+		<!-- Vault -->
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -88,6 +93,13 @@
 			<groupId>de.dytanic.cloudnet</groupId>
 			<artifactId>cloudnet-cloudperms</artifactId>
 			<version>3.4.5-RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Vault -->
+		<dependency>
+			<groupId>com.github.MilkBowl</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.7</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

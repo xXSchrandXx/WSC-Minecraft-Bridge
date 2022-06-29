@@ -55,6 +55,9 @@ public class HandlerListener implements Listener {
                         handler.addPasswordHandler("/permission/removeUsersFromGroups", new CloudNetPermissionHandler(PermissionMethodEnum.removeUsersFromGroups));
                     }
                     return;
+                case Vault:
+                    instance.getLogger().log(Level.WARNING, "WebServer: Vault is not supported for BungeeCord.");
+                    return;
             }
             instance.getLogger().log(Level.WARNING, "WebServer: No supportet Permissionplugin found.");
             handler.addPasswordHandler("/permission", new DefaultPermissionHandler());

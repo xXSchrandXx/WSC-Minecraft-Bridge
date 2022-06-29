@@ -10,7 +10,12 @@ public enum PermissionPlugin {
      * CloudNet
      * @see <a href="https://cloudnetservice.eu/">CloudNetService</a>
      */
-    CloudNet("CloudNet-CloudPerms")
+    CloudNet("CloudNet-CloudPerms"),
+    /**
+     * Vault
+     * @see <a href="https://github.com/MilkBowl/VaultAPI">VaultAPI</a>
+     */
+    Vault("Vault")
     ;
 
     PermissionPlugin(String name) {
