@@ -1,5 +1,5 @@
 name: ${project.artifactId}-bukkit
-main: ${project.groupId}.bukkit.MinecraftBridgeBukkit
+main: ${project.groupId}.${project.artifactId}.bukkit.MinecraftBridgeBukkit
 version: ${project.version}
 author: xXSchrandXx
 description: WSC-Minecraft-Bridge
