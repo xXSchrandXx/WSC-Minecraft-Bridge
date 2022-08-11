@@ -141,7 +141,7 @@ public class MinecraftBridgeHandler {
         loadLists();
 
         try {
-            java.io.InputStream.class.getMethod("readAllBytes​");
+            java.io.InputStream.class.getMethod("readAllBytes");
         }
         catch (Exception e) {
             return false;
