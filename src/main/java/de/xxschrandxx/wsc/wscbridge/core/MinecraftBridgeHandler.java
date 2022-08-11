@@ -140,12 +140,24 @@ public class MinecraftBridgeHandler {
 
         loadLists();
 
+        try {
+            java.io.InputStream.class.getMethod("readAllBytes​");
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+        boolean startSuccessful = false;
         if (keyStorePath == null || storePassword == null || alias == null || keyPassword == null) {
-            return this.startHttp();
+            startSuccessful = this.startHttp();
         }
         else {
-            return this.startHttps(keyStorePath, storePassword, alias, keyPassword);
+            startSuccessful = this.startHttps(keyStorePath, storePassword, alias, keyPassword);
         }
+        if (startSuccessful) {
+            this.logger.log(Level.INFO, "WebServer: " + this.httpServer.getAddress().toString());
+        }
+        return startSuccessful;
     }
 
     private boolean startHttp() {
@@ -153,6 +165,7 @@ public class MinecraftBridgeHandler {
             this.httpServer.start();
         }
         catch (Exception e) {
+            logger.log(Level.WARNING, "WebServer: Unsuppoerted java version. Please use 9 or higher.");
             return false;
         }
         return true;
