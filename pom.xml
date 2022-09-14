@@ -23,22 +23,6 @@
 			<id>spigot-bungee-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
-		<!-- Permission Plugins -->
-		<!-- LuckPerms -->
-		<repository>
-			<id>codemc-release</id>
-			<url>https://repo.codemc.org/repository/maven-releases</url>
-		</repository>
-		<!-- CloudNet -->
-		<repository>
-			<id>cloudnet-releases</id>
-			<url>https://repo.cloudnetservice.eu/repository/releases/</url>
-		</repository>
-		<!-- Vault -->
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
@@ -55,12 +39,6 @@
 			<artifactId>bungeecord-api</artifactId>
 			<version>1.16-R0.4</version>
 		</dependency>
-		<!-- httpserver -->
-		<dependency>
-			<groupId>com.sun.net.httpserver</groupId>
-			<artifactId>http</artifactId>
-			<version>20070405</version>
-		</dependency>
 		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
@@ -73,34 +51,6 @@
 			<artifactId>bstats-bungeecord</artifactId>
 			<version>3.0.0</version>
 			<scope>compile</scope>
-		</dependency>
-		<!-- Permission plugins -->
-		<!-- LuckPerms -->
-		<dependency>
-			<groupId>net.luckperms</groupId>
-			<artifactId>api</artifactId>
-			<version>5.4</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- CloudNet -->
-		<dependency>
-			<groupId>de.dytanic.cloudnet</groupId>
-			<artifactId>cloudnet-driver</artifactId>
-			<version>3.4.5-RELEASE</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.dytanic.cloudnet</groupId>
-			<artifactId>cloudnet-cloudperms</artifactId>
-			<version>3.4.5-RELEASE</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Vault -->
-		<dependency>
-			<groupId>com.github.MilkBowl</groupId>
-			<artifactId>VaultAPI</artifactId>
-			<version>1.7</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -173,7 +123,6 @@
 							</relocations>
 							<artifactSet>
 								<includes>
-									<include>com.sun.net.httpserver:http</include>
 									<include>org.bstats</include>
 								</includes>
 							</artifactSet>
