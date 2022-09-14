@@ -25,12 +25,25 @@ import com.google.gson.Gson;
 import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
-public abstract class MinecraftBridgeCoreAPI {
+public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI {
 
-    private final Integer id;
-    private final String auth;
+    protected final Integer id;
+    public Integer getID() {
+        return this.id;
+    }
+
+    protected final String auth;
+    public String getAuth() {
+        return this.auth;
+    }
+
     protected final Logger logger;
-    private final Boolean debug;
+
+    protected final Boolean debug;
+    public Boolean isDebugModeEnabled() {
+        return this.debug;
+    }
+
     protected final Gson gson = new Gson();
 
     /**
@@ -41,20 +54,21 @@ public abstract class MinecraftBridgeCoreAPI {
      * @param debug Weather debug mode is enabled
      */
     public MinecraftBridgeCoreAPI(Integer id, String user, String password, Logger logger, Boolean debug) {
-        this.id = id;
-        String authString = user + ":" + password;
-        this.auth = new String(Base64.getEncoder().encode(authString.getBytes()));
-        this.logger = logger;
-        this.debug = debug;
+        this(id, new String(Base64.getEncoder().encode((user + ":" + password).getBytes())), logger, debug);
     }
 
     /**
-     * Weather debug mode is enabled
-     * @return Boolean
-     */
-    public Boolean isDebugModeEnabled() {
-        return this.debug;
-    }
+    * MinecraftBridgeAPI
+    * @param id MinecraftID
+    * @param auth Authentication
+    * @param debug Weather debug mode is enabled
+    */
+   public MinecraftBridgeCoreAPI(Integer id, String auth, Logger logger, Boolean debug) {
+       this.id = id;
+       this.auth = auth;
+       this.logger = logger;
+       this.debug = debug;
+   }
 
     public void log(String message) {
         this.log(message, null);
@@ -75,11 +89,6 @@ public abstract class MinecraftBridgeCoreAPI {
 
     public abstract ArrayList<ISender<?>> getOnlineSender(IMinecraftBridgePlugin<?> instance);
 
-    /**
-     * Returns URL with added id for request.
-     * @return URL
-     * @throws MalformedURLException
-     */
     public URL getURL(URL url) throws MalformedURLException {
         URL newURL = new URL(url, "&id=" + this.id);
         if (isDebugModeEnabled()) {
@@ -88,91 +97,26 @@ public abstract class MinecraftBridgeCoreAPI {
         return newURL;
     }
 
-    /**
-     * Sends a request to given url
-     * @param url Url to server
-     * @param postData Data for request
-     * @return {@link Response}
-     * @throws SocketTimeoutException
-     * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     * @throws IOException
-     */
     public Response<String, Object> requestObject(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException {
         String postString = this.gson.toJson(postData);
         return this.requestObject(url, postString);
     }
 
-    /**
-     * Sends a request to given url
-     * @param url Url to server
-     * @param postData Data for request
-     * @return {@link Response}
-     * @throws IOException
-     * @throws SocketTimeoutException
-     * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     */
     public Response<String, Object> requestObject(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException {
         Response<String, Object> request = new Response<String, Object>(this.request(url, postData));
         return request;
     }
 
-    /**
-     * Sends a request to given url
-     * @param url Url to server
-     * @param postData Data for request
-     * @return {@link Response}
-     * @throws SocketTimeoutException
-     * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     * @throws IOException
-     */
     public Response<String, String> requestString(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException {
         String postString = this.gson.toJson(postData);
         return this.requestString(url, postString);
     }
 
-    /**
-     * Sends a request to given url
-     * @param url Url to server
-     * @param postData Data for request
-     * @return {@link Response}
-     * @throws IOException
-     * @throws SocketTimeoutException
-     * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     */
     public Response<String, String> requestString(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException {
         Response<String, String> request = new Response<String, String>(this.request(url, postData));
         return request;
     }
 
-    /**
-     * Creates and connets to given url
-     * @param url Url to server
-     * @param postData Data for request
-     * @return {@link ResponseData}
-     * @throws MalformedURLException
-     * @throws SocketTimeoutException
-     * @throws IOException
-     */
     public ResponseData request(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException {
         URL newURL = this.getURL(url);
         if (!newURL.getProtocol().equals("https")) {
