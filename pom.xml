@@ -143,11 +143,11 @@
 							<goal>upload</goal>
 						</goals>
 						<configuration>
-							<serverId>gamestrike</serverId>
+							<serverId>gamestrikeNew</serverId>
 							<fromDir>${project.build.directory}</fromDir>
 							<includes>apidocs/**, ${project.artifactId}-${project.version}.jar</includes>
 							<excludes>*javadoc.jar,*shaded.jar</excludes>
-							<url>dav://maven.gamestrike.de/docs</url>
+							<url>ftp://maven.gamestrike.de/docs</url>
 							<toDir>${project.artifactId}/${project.version}</toDir>
 							<optimize>false</optimize>
 						</configuration>
@@ -163,19 +163,20 @@
 		</plugins>
 
 		<extensions>
+			<!-- Enabling the use of FTP -->
 			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>3.4.3</version>
+			  <groupId>org.apache.maven.wagon</groupId>
+			   <artifactId>wagon-ftp</artifactId>
+			   <version>1.0</version>
 			</extension>
-		</extensions>
+		  </extensions>
 	</build>
 
 	<distributionManagement>
 		<repository>
-			<id>gamestrike</id>
+			<id>gamestrikeNew</id>
 			<name>Gamestrike.de</name>
-			<url>dav://maven.gamestrike.de/mvn/</url>
+			<url>ftp://maven.gamestrike.de/mvn/</url>
 		</repository>
 	</distributionManagement>
 

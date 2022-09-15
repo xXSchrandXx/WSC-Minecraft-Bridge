@@ -45,14 +45,9 @@ public interface IMinecraftBridgeCoreAPI {
      * @param url Url to server
      * @param postData Data for request
      * @return {@link Response}
+     * @throws IOException
      * @throws SocketTimeoutException
      * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     * @throws IOException
      */
     public Response<String, Object> requestObject(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException;
 
@@ -64,11 +59,6 @@ public interface IMinecraftBridgeCoreAPI {
      * @throws IOException
      * @throws SocketTimeoutException
      * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
      */
     public Response<String, Object> requestObject(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException;
 
@@ -78,14 +68,9 @@ public interface IMinecraftBridgeCoreAPI {
      * @param url Url to server
      * @param postData Data for request
      * @return {@link Response}
+     * @throws IOException
      * @throws SocketTimeoutException
      * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
-     * @throws IOException
      */
     public Response<String, String> requestString(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException;
 
@@ -97,11 +82,6 @@ public interface IMinecraftBridgeCoreAPI {
      * @throws IOException
      * @throws SocketTimeoutException
      * @throws MalformedURLException
-     * @throws UnknownServiceException
-     * @throws IllegalStateException
-     * @throws NullPointerException
-     * @throws ProtocolException
-     * @throws SecurityException
      */
     public Response<String, String> requestString(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException;
 
@@ -110,9 +90,9 @@ public interface IMinecraftBridgeCoreAPI {
      * @param url Url to server
      * @param postData Data for request
      * @return {@link ResponseData}
-     * @throws MalformedURLException
-     * @throws SocketTimeoutException
      * @throws IOException
+     * @throws SocketTimeoutException
+     * @throws MalformedURLException
      */
     public ResponseData request(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException;
 }

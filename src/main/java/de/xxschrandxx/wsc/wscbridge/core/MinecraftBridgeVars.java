@@ -12,7 +12,6 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
 
     public static class Configuration {
         // universal
-        // TODO debug
         public static final String Debug = "debug";
         // id
         public static final String ID = "id";
