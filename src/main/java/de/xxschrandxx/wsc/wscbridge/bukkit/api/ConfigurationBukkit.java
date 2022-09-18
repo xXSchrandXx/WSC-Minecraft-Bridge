@@ -1,5 +1,7 @@
 package de.xxschrandxx.wsc.wscbridge.bukkit.api;
 
+import java.util.List;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.IConfiguration;
@@ -27,7 +29,16 @@ public class ConfigurationBukkit implements IConfiguration<FileConfiguration> {
     public int getInt(String path) {
         return this.configuration.getInt(path);
     }
+    public double getDouble(String path) {
+        return this.configuration.getDouble(path);
+    }
     public long getLong(String path) {
         return this.configuration.getLong(path);
+    }
+    public float getFloat(String path) {
+        return Float.valueOf(getInt(path));
+    }
+    public List<String> getStringList(String path) {
+        return this.configuration.getStringList(path);
     }
 }

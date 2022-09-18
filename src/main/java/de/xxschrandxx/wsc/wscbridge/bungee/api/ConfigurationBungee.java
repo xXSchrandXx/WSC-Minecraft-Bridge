@@ -1,5 +1,7 @@
 package de.xxschrandxx.wsc.wscbridge.bungee.api;
 
+import java.util.List;
+
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.IConfiguration;
 import net.md_5.bungee.config.Configuration;
 
@@ -29,7 +31,16 @@ public class ConfigurationBungee implements IConfiguration<Configuration> {
     public int getInt(String path) {
         return this.configuration.getInt(path);
     }
+    public double getDouble(String path) {
+        return this.configuration.getDouble(path);
+    }
+    public float getFloat(String path) {
+        return this.configuration.getFloat(path);
+    }
     public long getLong(String path) {
         return this.configuration.getLong(path);
+    }
+    public List<String> getStringList(String path) {
+        return this.configuration.getStringList(path);
     }
 }
