@@ -2,7 +2,13 @@ package de.xxschrandxx.wsc.wscbridge.bungee;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
+
+import org.bstats.bungeecord.Metrics;
+import org.bstats.charts.SimpleBarChart;
 
 import de.xxschrandxx.wsc.wscbridge.bungee.api.ConfigurationBungee;
 import de.xxschrandxx.wsc.wscbridge.bungee.api.MinecraftBridgeBungeeAPI;
@@ -64,6 +70,26 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
         // Load commands
         getLogger().log(Level.INFO, "Loading Commands.");
         getProxy().getPluginManager().registerCommand(getInstance(), new WSCBridgeBungee("wscbridge"));
+
+        // Load bStats
+        getProxy().getScheduler().runAsync(getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Metrics metrics = new Metrics(getInstance(), 14659);
+                WSCBridgeModuleEventBungee event = new WSCBridgeModuleEventBungee();
+                getProxy().getPluginManager().callEvent(event);
+                metrics.addCustomChart(new SimpleBarChart("Module", new Callable<Map<String, Integer>>() {
+                    @Override
+                    public Map<String, Integer> call() throws Exception {
+                        Map<String, Integer> map = new HashMap<String, Integer>();
+                        for (String module : event.getModules()) {
+                            map.put(module, 1);
+                        }
+                        return map;
+                    }
+                }));
+            }
+        });
     }
 
     @Override
