@@ -3,8 +3,9 @@ main: ${project.groupId}.${project.artifactId}.bungee.MinecraftBridgeBungee
 version: ${project.version}
 author: xXSchrandXx
 description: WSC-Minecraft-Bridge
-softdepend: [CloudNet-Perms, LuckPerms]
 
 commands:
-  wscbridgebungee:
+  wscbridge:
     description: Command for WSC-Minecraft-Bridge.
+    aliases:
+    - wscbridgebungee

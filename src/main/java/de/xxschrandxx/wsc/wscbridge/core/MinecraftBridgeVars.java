@@ -1,74 +1,75 @@
 package de.xxschrandxx.wsc.wscbridge.core;
 
-import de.xxschrandxx.wsc.wscbridge.core.permission.PermissionPlugin;
+import java.util.logging.Logger;
 
-public final class MinecraftBridgeVars {
-    public final static class Configuration {
-        public final static class server {
-            /** hostname for webserver */
-            public final static String hostname = "server.hostname";
-            /** port for webserver */
-            public final static String port = "server.port";
-            /** user for webserver */
-            public final static String user = "server.user";
-            /** password for webserver */
-            public final static String password = "server.password";
-            /** path to whitelist */
-            public final static String whitelistPath = "server.whitelistPath";
-            /** path for blacklist */
-            public final static String blacklistPath = "server.blacklistPath";
-            public final static class defaults {
-                public final static String hostname = "localhost";
-                public final static Integer port = 8080;
-                public final static String user = "user";
-                public final static String password = "MySuperSecretPassword";
-                public final static String whitelistPath = "whitelist.txt";
-                public final static String blacklistPath = "blacklist.txt";
-            }
-            public final static class ssl {
-                /** weather ssl should be enabled */
-                public final static String enabled = "server.ssl.enabled";
-                /** path to keystore  */
-                public final static String keyStorePath = "server.ssl.keyPath";
-                /** keyStorePassword */
-                public final static String keyStorePassword = "server.ssl.keyStorePassword";
-                /** keyAlias */
-                public final static String keyAlias = "server.ssl.keyAlias";
-                /** keyPassword */
-                public final static String keyPassword = "server.ssl.keyPassword";
-                public final static class defaults {
-                    public final static Boolean enabled = false;
-                    public final static String keyStorePath = "keys";
-                    public final static String keyStorePassword = "MySuperSecretPassword";
-                    public final static String keyAlias = "alias";
-                    public final static String keyPassword = "MySuperSecretPassword";
-                }
-            }
-            public final static class floodgate {
-                /** max attempts until an ip gets blocked temporality */
-                public final static String maxTries = "server.floodgate.maxTries";
-                /** time in milliseconds after the floodgate resets */
-                public final static String resetTime = "server.floodgate.resetTime";
-                /** max overruns until ip gets blocked permanent */
-                public final static String maxOverruns = "server.floodgate.maxOverruns";
-                public final static class defaults {
-                    public final static Integer maxTries = 600;
-                    public final static Long resetTime = 600000L; 
-                    public final static Integer maxOverruns = 0;
-                }
-            }
-        }
-        public final static class modules {
-            public final static class groupsync {
-                /** weather groupsync module should be enabled */
-                public final static String enabled = "modules.groupsync.enabled";
-                /** permission plugin name */
-                public final static String plugin = "modules.groupsync.plugin";
-                public final static class defaults {
-                    public final static Boolean enabled = false;
-                    public final static PermissionPlugin plugin = PermissionPlugin.LuckPerms;
-                }
-            }
-        }
+import de.xxschrandxx.wsc.wscbridge.core.api.configuration.AbstractConfiguration;
+import de.xxschrandxx.wsc.wscbridge.core.api.configuration.IConfiguration;
+
+public class MinecraftBridgeVars extends AbstractConfiguration {
+    public static boolean startConfig(IConfiguration<?> configuration, Logger logger) {
+        return startConfig(configuration, Configuration.class, defaults.class, logger);
+    }
+
+    public static class Configuration {
+        // universal
+        public static final String Debug = "debug";
+        // id
+        public static final String ID = "id";
+        // user
+        public static final String User = "user";
+        // password
+        public static final String Password = "password";
+
+        // permission
+        // permission.command.wscbridge
+        public static final String PermCmdWSCBridge = "perission.command.wscbridge";
+
+        // language
+        // language.command.noperm
+        public static final String LangCmdNoPerm = "language.command.nopermission";
+        // language.command.reload.usage
+        public static final String LangCmdReloadUsage = "language.command.reload.usage";
+        // language.command.reload.config.start
+        public static final String LangCmdReloadConfigStart = "language.command.reload.config.start";
+        // language.command.reload.config.error
+        public static final String LangCmdReloadConfigError = "language.command.reload.config.error";
+        // language.command.reload.config.success
+        public static final String LangCmdReloadConfigSuccess = "language.command.reload.config.success";
+        // language.command.reload.api.start
+        public static final String LangCmdReloadAPIStart = "language.command.reload.api.start";
+        // language.command.reload.api.success
+        public static final String LangCmdReloadAPISuccess = "language.command.reload.api.success";
+    }
+    // Default values
+    public static final class defaults {
+        // universal
+        // debug
+        public static final Boolean Debug = false;
+        // id
+        public static final Integer ID = 0;
+        // user
+        public static final String User = "user";
+        // password
+        public static final String Password = "MySuperSecretPassword";
+
+        // permission
+        // permission.command.wscbridge
+        public static final String PermCmdWSCBridge = "wscbridge.command.wscbridge";
+
+        // language
+        // language.command.noperm
+        public static final String LangCmdNoPerm = "&8[&6WSC-Bridge&8]&c You don't have permission to do this.";
+        // language.command.reload.usage
+        public static final String LangCmdReloadUsage = "&8[&6WSC-Bridge&8]&7 Usage: &e/wscbridge [reload/info]";
+        // language.command.reload.config.start
+        public static final String LangCmdReloadConfigStart = "&8[&6WSC-Bridge&8]&7 Reloading configuration.";
+        // language.command.reload.config.error
+        public static final String LangCmdReloadConfigError = "&8[&6WSC-Bridge&8]&e Reloading configuration failed.";
+        // language.command.reload.config.success
+        public static final String LangCmdReloadConfigSuccess = "&8[&6WSC-Bridge&8]&7 Configuration reloaded successfully.";
+        // language.command.reload.api.start
+        public static final String LangCmdReloadAPIStart = "&8[&6WSC-Bridge&8]&7 Reloading API.";
+        // language.command.reload.api.success
+        public static final String LangCmdReloadAPISuccess = "&8[&6WSC-Bridge&8]&7 API reloaded successfully.";
     }
 }
