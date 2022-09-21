@@ -189,4 +189,73 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
         }
         return new ResponseData(header, code, message, body);
     }
+
+    public Response<String, Object> getObject(URL url) throws MalformedURLException, SocketTimeoutException, IOException {
+        Response<String, Object> request = new Response<String, Object>(this.get(url));
+        return request;
+    }
+
+
+    public Response<String, String> getString(URL url) throws MalformedURLException, SocketTimeoutException, IOException {
+        Response<String, String> request = new Response<String, String>(this.get(url));
+        return request;
+    }
+
+    public ResponseData get(URL url) throws MalformedURLException, SocketTimeoutException, IOException {
+        URL newURL = this.getURL(url);
+        if (!newURL.getProtocol().equals("https")) {
+            throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
+        }
+        if (isDebugModeEnabled()) {
+            this.log("Creating URLConnection.");
+        }
+        URLConnection c = newURL.openConnection();
+        if (!(c instanceof HttpsURLConnection)) {
+            throw new IOException("opened connection is not an HttpsURLConnection.");
+        }
+        HttpsURLConnection connection = (HttpsURLConnection) c;
+        try {
+            connection.setRequestMethod("GET");
+        } catch (ProtocolException e) {
+            if (isDebugModeEnabled()) {
+                this.log("Could not set method 'GET'", e);
+            }
+        }
+        connection.setRequestProperty("Authorization", "Basic " + auth);
+        if (isDebugModeEnabled()) {
+            this.log("Request-Header: " + connection.getRequestProperties().toString());
+        }
+        connection.setDoInput(true);
+        if (isDebugModeEnabled()) {
+            this.log("Opening connection.");
+        }
+        connection.connect();
+        Map<String, List<String>> header = connection.getHeaderFields();
+        if (isDebugModeEnabled()) {
+            this.log("Response-Header: " + header.toString());
+        }
+        Integer code = connection.getResponseCode();
+        if (isDebugModeEnabled()) {
+            this.log("Response-Code: " + code.toString());
+        }
+        String message = connection.getResponseMessage();
+        if (isDebugModeEnabled()) {
+            this.log("Response-Message: " + message);
+        }
+        String body = null;
+        try {
+            InputStream input = connection.getInputStream();
+            byte[] bodyBytes = input.readAllBytes();
+            body = new String(bodyBytes, StandardCharsets.UTF_8);
+            if (isDebugModeEnabled()) {
+                this.log("Response-Body: " + body);
+            }    
+        }
+        catch (IOException e) {
+            if (isDebugModeEnabled()) {
+                this.log("Response-Body: null", e);
+            }
+        }
+        return new ResponseData(header, code, message, body);
+    }
 }

@@ -95,4 +95,34 @@ public interface IMinecraftBridgeCoreAPI {
      * @throws MalformedURLException
      */
     public ResponseData request(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException;
+
+    /**
+     * Sends a request to given url
+     * @param url Url to server
+     * @return {@link Response}
+     * @throws IOException
+     * @throws SocketTimeoutException
+     * @throws MalformedURLException
+     */
+    public Response<String, Object> getObject(URL url) throws MalformedURLException, SocketTimeoutException, IOException;
+
+    /**
+     * Sends a request to given url
+     * @param url Url to server
+     * @return {@link Response}
+     * @throws IOException
+     * @throws SocketTimeoutException
+     * @throws MalformedURLException
+     */
+    public Response<String, String> getString(URL url) throws MalformedURLException, SocketTimeoutException, IOException;
+
+    /**
+     * Creates and connets to given url
+     * @param url Url to server
+     * @return {@link ResponseData}
+     * @throws IOException
+     * @throws SocketTimeoutException
+     * @throws MalformedURLException
+     */
+    public ResponseData get(URL url) throws MalformedURLException, SocketTimeoutException, IOException;
 }
