@@ -23,6 +23,10 @@ public class WSCBridge {
             case "reload":
                 reload(sender);
                 break;
+            case "info":
+                // TODO
+                sender.sendMessage("Comming soon.");
+                break;
             default:
                 sender.send(MinecraftBridgeVars.Configuration.LangCmdReloadUsage);
                 break;
