@@ -6,6 +6,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class WSCBridgeModuleEventBukkit extends Event {
+    public WSCBridgeModuleEventBukkit() {
+        super(true);
+    }
+
     protected ArrayList<String> modules = new ArrayList<String>();
 
     public ArrayList<String> getModules() {
