@@ -13,8 +13,6 @@ import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
 public interface IMinecraftBridgeCoreAPI {
 
-    public Integer getID();
-
     public String getAuth();
 
     /**
@@ -32,13 +30,6 @@ public interface IMinecraftBridgeCoreAPI {
     public ISender<?> getSender(String name, IMinecraftBridgePlugin<?> instance);
 
     public ArrayList<ISender<?>> getOnlineSender(IMinecraftBridgePlugin<?> instance);
-
-    /**
-     * Returns URL with added id for request.
-     * @return URL
-     * @throws MalformedURLException
-     */
-    public URL getURL(URL url) throws MalformedURLException;
 
     /**
      * Sends a request to given url

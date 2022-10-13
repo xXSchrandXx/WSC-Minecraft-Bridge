@@ -14,12 +14,16 @@ import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
 public class MinecraftBridgeBukkitAPI extends MinecraftBridgeCoreAPI {
 
-    public MinecraftBridgeBukkitAPI(Integer id, String auth, Logger logger, Boolean debug) {
-        super(id, auth, logger, debug);
+    public MinecraftBridgeBukkitAPI(String auth, Logger logger, Boolean debug) {
+        super(auth, logger, debug);
     }
 
-    public MinecraftBridgeBukkitAPI(Integer id, String user, String password, Logger logger, Boolean debug) {
-        super(id, user, password, logger, debug);
+    public MinecraftBridgeBukkitAPI(String user, String password, Logger logger, Boolean debug) {
+        super(user, password, logger, debug);
+    }
+
+    public MinecraftBridgeBukkitAPI(MinecraftBridgeBukkitAPI api, Logger logger) {
+        super(api, logger);
     }
 
     @Override

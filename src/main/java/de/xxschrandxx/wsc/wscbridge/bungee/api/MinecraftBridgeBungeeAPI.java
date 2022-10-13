@@ -13,12 +13,16 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class MinecraftBridgeBungeeAPI extends MinecraftBridgeCoreAPI {
 
-    public MinecraftBridgeBungeeAPI(Integer id, String auth, Logger logger, Boolean debug) {
-        super(id, auth, logger, debug);
+    public MinecraftBridgeBungeeAPI(String auth, Logger logger, Boolean debug) {
+        super(auth, logger, debug);
     }
 
-    public MinecraftBridgeBungeeAPI(Integer id, String user, String password, Logger logger, Boolean debug) {
-        super(id, user, password, logger, debug);
+    public MinecraftBridgeBungeeAPI(String user, String password, Logger logger, Boolean debug) {
+        super(user, password, logger, debug);
+    }
+
+    public MinecraftBridgeBungeeAPI(MinecraftBridgeBungeeAPI api, Logger logger) {
+        super(api, logger);
     }
 
     @Override

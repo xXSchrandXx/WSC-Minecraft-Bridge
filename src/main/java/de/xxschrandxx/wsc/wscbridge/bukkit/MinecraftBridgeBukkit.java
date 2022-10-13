@@ -31,7 +31,6 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
 
     public void loadAPI(ISender<?> sender) {
         this.api = new MinecraftBridgeBukkitAPI(
-            getConfiguration().getInt(MinecraftBridgeVars.Configuration.ID),
             getConfiguration().getString(MinecraftBridgeVars.Configuration.User),
             getConfiguration().getString(MinecraftBridgeVars.Configuration.Password),
             getLogger(),

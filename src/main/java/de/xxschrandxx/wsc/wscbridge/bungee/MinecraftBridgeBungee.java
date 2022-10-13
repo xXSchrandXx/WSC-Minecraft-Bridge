@@ -35,7 +35,6 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
 
     public void loadAPI(ISender<?> sender) {
         api = new MinecraftBridgeBungeeAPI(
-            getConfiguration().getInt(MinecraftBridgeVars.Configuration.ID),
             getConfiguration().getString(MinecraftBridgeVars.Configuration.User),
             getConfiguration().getString(MinecraftBridgeVars.Configuration.Password),
             getLogger(),

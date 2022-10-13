@@ -27,11 +27,6 @@ import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
 public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI {
 
-    protected final Integer id;
-    public Integer getID() {
-        return this.id;
-    }
-
     protected final String auth;
     public String getAuth() {
         return this.auth;
@@ -48,27 +43,35 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
 
     /**
      * MinecraftBridgeAPI
-     * @param id MinecraftID
      * @param user Authentication User
      * @param password Authentication Password
+     * @param logger Logger to log information
      * @param debug Weather debug mode is enabled
      */
-    public MinecraftBridgeCoreAPI(Integer id, String user, String password, Logger logger, Boolean debug) {
-        this(id, new String(Base64.getEncoder().encode((user + ":" + password).getBytes())), logger, debug);
+    public MinecraftBridgeCoreAPI(String user, String password, Logger logger, Boolean debug) {
+        this(new String(Base64.getEncoder().encode((user + ":" + password).getBytes())), logger, debug);
     }
 
     /**
-    * MinecraftBridgeAPI
-    * @param id MinecraftID
-    * @param auth Authentication
-    * @param debug Weather debug mode is enabled
-    */
-   public MinecraftBridgeCoreAPI(Integer id, String auth, Logger logger, Boolean debug) {
-       this.id = id;
+     * MinecraftBridgeAPI
+     * @param auth Authentication
+     * @param logger Logger to log information
+     * @param debug Weather debug mode is enabled
+     */
+    public MinecraftBridgeCoreAPI(String auth, Logger logger, Boolean debug) {
        this.auth = auth;
        this.logger = logger;
        this.debug = debug;
-   }
+    }
+
+    /**
+     * MinecraftBridgeAPI
+     * @param api
+     * @param logger
+     */
+    public MinecraftBridgeCoreAPI(MinecraftBridgeCoreAPI api, Logger logger) {
+        this(api.getAuth(), logger, api.isDebugModeEnabled());
+    }
 
     public void log(String message) {
         this.log(message, null);
@@ -88,14 +91,6 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
     public abstract ISender<?> getSender(String name, IMinecraftBridgePlugin<?> instance);
 
     public abstract ArrayList<ISender<?>> getOnlineSender(IMinecraftBridgePlugin<?> instance);
-
-    public URL getURL(URL url) throws MalformedURLException {
-        URL newURL = new URL(url, "&id=" + this.id);
-        if (isDebugModeEnabled()) {
-            this.log("New URL: " + newURL.toString());
-        }
-        return newURL;
-    }
 
     public Response<String, Object> requestObject(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException {
         String postString = this.gson.toJson(postData);
@@ -118,14 +113,13 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
     }
 
     public ResponseData request(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException {
-        URL newURL = this.getURL(url);
-        if (!newURL.getProtocol().equals("https")) {
+        if (!url.getProtocol().equals("https")) {
             throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
         }
         if (isDebugModeEnabled()) {
             this.log("Creating URLConnection.");
         }
-        URLConnection c = newURL.openConnection();
+        URLConnection c = url.openConnection();
         if (!(c instanceof HttpsURLConnection)) {
             throw new IOException("opened connection is not an HttpsURLConnection.");
         }
@@ -202,14 +196,13 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
     }
 
     public ResponseData get(URL url) throws MalformedURLException, SocketTimeoutException, IOException {
-        URL newURL = this.getURL(url);
-        if (!newURL.getProtocol().equals("https")) {
+        if (!url.getProtocol().equals("https")) {
             throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
         }
         if (isDebugModeEnabled()) {
             this.log("Creating URLConnection.");
         }
-        URLConnection c = newURL.openConnection();
+        URLConnection c = url.openConnection();
         if (!(c instanceof HttpsURLConnection)) {
             throw new IOException("opened connection is not an HttpsURLConnection.");
         }
