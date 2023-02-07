@@ -50,10 +50,9 @@ public class SenderBukkit implements ISender<CommandSender> {
 
     public void sendMessage(String message, String hoverMessage, String copyText) {
         try {
-            Class.forName("org.bukkit.command.CommandSender.Spigot");
-            new SenderSpigot(this.sender, this.instance).sendMessage(message);
+            new SenderSpigot(this.sender, this.instance).sendMessage(message, hoverMessage, copyText);
         }
-        catch (ClassNotFoundException e) {
+        catch (Exception e) {
             this.sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
     }
