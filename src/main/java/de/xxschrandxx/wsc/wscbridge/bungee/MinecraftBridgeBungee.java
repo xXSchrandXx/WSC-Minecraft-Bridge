@@ -25,6 +25,15 @@ import net.md_5.bungee.config.YamlConfiguration;
 public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlugin<MinecraftBridgeBungeeAPI> {
 
     // start of api part
+    public String getInfo() {
+        String rawMessage = getConfiguration().getString(MinecraftBridgeVars.Configuration.LangCmdInfoInfo);
+        String message = rawMessage
+            .replaceAll("%server%", instance.getProxy().getName())
+            .replaceAll("%serverversion%", instance.getProxy().getVersion())
+            .replaceAll("%pluginversion%", instance.getDescription().getVersion());
+        return message;
+    }
+
     private static MinecraftBridgeBungee instance;
 
     public static MinecraftBridgeBungee getInstance() {

@@ -24,8 +24,8 @@ public class WSCBridge {
                 reload(sender);
                 break;
             case "info":
-                // TODO
-                sender.sendMessage("Comming soon.");
+                String info = instance.getInfo();
+                sender.sendMessage(info, instance.getConfiguration().getString(MinecraftBridgeVars.Configuration.LangCmdInfoCopy), info);
                 break;
             default:
                 sender.send(MinecraftBridgeVars.Configuration.LangCmdReloadUsage);

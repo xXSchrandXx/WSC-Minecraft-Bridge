@@ -16,4 +16,5 @@ public interface IMinecraftBridgePlugin<T extends MinecraftBridgeCoreAPI> {
     public boolean saveConfiguration();
     public IConfiguration<?> getConfiguration();
     public Logger getLogger();
+    public String getInfo();
 }

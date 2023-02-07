@@ -21,6 +21,15 @@ import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridgePlugin<MinecraftBridgeBukkitAPI> {
 
     // start of api part
+    public String getInfo() {
+        String rawMessage = getConfiguration().getString(MinecraftBridgeVars.Configuration.LangCmdInfoInfo);
+        String message = rawMessage
+            .replaceAll("%server%", instance.getServer().getName())
+            .replaceAll("%serverversion%", instance.getServer().getVersion())
+            .replaceAll("%pluginversion%", instance.getDescription().getVersion());
+        return message;
+    }
+
     private static MinecraftBridgeBukkit instance;
 
     public static MinecraftBridgeBukkit getInstance() {
