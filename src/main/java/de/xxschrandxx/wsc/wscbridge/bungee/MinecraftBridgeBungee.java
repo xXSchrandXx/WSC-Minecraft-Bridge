@@ -15,6 +15,7 @@ import de.xxschrandxx.wsc.wscbridge.bungee.api.MinecraftBridgeBungeeAPI;
 import de.xxschrandxx.wsc.wscbridge.bungee.api.command.SenderBungee;
 import de.xxschrandxx.wsc.wscbridge.bungee.api.event.*;
 import de.xxschrandxx.wsc.wscbridge.bungee.commands.WSCBridgeBungee;
+import de.xxschrandxx.wsc.wscbridge.bungee.listener.WSCBridgeCommandAliasBungee;
 import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.MinecraftBridgeVars;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
@@ -78,6 +79,10 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
         // Load commands
         getLogger().log(Level.INFO, "Loading Commands.");
         getProxy().getPluginManager().registerCommand(getInstance(), new WSCBridgeBungee("wscbridge"));
+
+        // Load listener
+        getLogger().log(Level.INFO, "Loading Listener.");
+        getProxy().getPluginManager().registerListener(getInstance(), new WSCBridgeCommandAliasBungee());
 
         // Load bStats
         getProxy().getScheduler().runAsync(getInstance(), new Runnable() {

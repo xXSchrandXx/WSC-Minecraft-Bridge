@@ -14,6 +14,7 @@ import de.xxschrandxx.wsc.wscbridge.bukkit.api.MinecraftBridgeBukkitAPI;
 import de.xxschrandxx.wsc.wscbridge.bukkit.api.command.SenderBukkit;
 import de.xxschrandxx.wsc.wscbridge.bukkit.api.event.*;
 import de.xxschrandxx.wsc.wscbridge.bukkit.commands.WSCBridgeBukkit;
+import de.xxschrandxx.wsc.wscbridge.bukkit.listener.WSCBridgeCommandAliasBukkit;
 import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.MinecraftBridgeVars;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
@@ -73,6 +74,10 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
         // Load commands
         getLogger().log(Level.INFO, "Loading Commands.");
         getCommand("wscbridge").setExecutor(new WSCBridgeBukkit());
+
+        // Load listener
+        getLogger().log(Level.INFO, "Loading Listener.");
+        getServer().getPluginManager().registerEvents(new WSCBridgeCommandAliasBukkit(), getInstance());
 
         // Load bStats
         getServer().getScheduler().runTaskAsynchronously(getInstance(), new Runnable() {

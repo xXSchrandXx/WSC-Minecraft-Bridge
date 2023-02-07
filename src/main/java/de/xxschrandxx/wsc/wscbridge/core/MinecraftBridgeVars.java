@@ -1,5 +1,6 @@
 package de.xxschrandxx.wsc.wscbridge.core;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.AbstractConfiguration;
@@ -20,6 +21,12 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
         // password
         public static final String Password = "password";
 
+        // cmdalias
+        // cmdalias.enabled
+        public static final String cmdAliasEnabled = "cmdalias.enabled";
+        // cmdalias.aliases
+        public static final String cmdAliases = "cmdalias.aliases";
+
         // permission
         // permission.command.wscbridge
         public static final String PermCmdWSCBridge = "perission.command.wscbridge";
@@ -39,6 +46,10 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
         public static final String LangCmdReloadAPIStart = "language.command.reload.api.start";
         // language.command.reload.api.success
         public static final String LangCmdReloadAPISuccess = "language.command.reload.api.success";
+        // language.command.info.info
+        public static final String LangCmdInfoInfo = "language.command.info.info";
+        // language.command.info.copy
+        public static final String LangCmdInfoCopy = "language.command.info.copy";
     }
     // Default values
     public static final class defaults {
@@ -51,6 +62,12 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
         public static final String User = "user";
         // password
         public static final String Password = "MySuperSecretPassword";
+
+        // cmdalias
+        // cmdalias.enabled
+        public static final Boolean cmdAliasEnabled = false;
+        // cmdalias.aliases
+        public static final List<String> cmdAliases = List.of("wscbridge", "wscb");
 
         // permission
         // permission.command.wscbridge
@@ -71,5 +88,9 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
         public static final String LangCmdReloadAPIStart = "&8[&6WSC-Bridge&8]&7 Reloading API.";
         // language.command.reload.api.success
         public static final String LangCmdReloadAPISuccess = "&8[&6WSC-Bridge&8]&7 API reloaded successfully.";
+        // language.command.info.info
+        public static final String LangCmdInfoInfo = "Server: %server%\nServer-Version: %serverversion%\nPlugin-Version: %pluginversion%";
+        // language.command.info.copy
+        public static final String LangCmdInfoCopy = "Click to copy";
     }
 }
