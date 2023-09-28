@@ -2,6 +2,7 @@ package de.xxschrandxx.wsc.wscbridge.core.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
@@ -113,17 +114,21 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
     }
 
     public ResponseData request(URL url, String postData) throws MalformedURLException, SocketTimeoutException, IOException {
-        if (!url.getProtocol().equals("https")) {
+        if (!url.getProtocol().equals("https") && !isDebugModeEnabled()) {
             throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
         }
         if (isDebugModeEnabled()) {
             this.log("Creating URLConnection.");
         }
         URLConnection c = url.openConnection();
-        if (!(c instanceof HttpsURLConnection)) {
+        HttpURLConnection connection = null;
+        if (!(c instanceof HttpsURLConnection) && !isDebugModeEnabled()) {
             throw new IOException("opened connection is not an HttpsURLConnection.");
+        } else if (isDebugModeEnabled()) {
+            connection = (HttpURLConnection) c;
+        } else {
+            connection = (HttpsURLConnection) c;
         }
-        HttpsURLConnection connection = (HttpsURLConnection) c;
 
         byte[] postDataByes = postData.getBytes();
         int postDataLength = postDataByes.length;
@@ -196,17 +201,24 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
     }
 
     public ResponseData get(URL url) throws MalformedURLException, SocketTimeoutException, IOException {
-        if (!url.getProtocol().equals("https")) {
+        if (!url.getProtocol().equals("https") && !isDebugModeEnabled()) {
+            throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
+        }
+        if (!url.getProtocol().equals("https") && !isDebugModeEnabled()) {
             throw new MalformedURLException("Only https is supportet. Given protocol: \"" + url.getProtocol() + "\"");
         }
         if (isDebugModeEnabled()) {
             this.log("Creating URLConnection.");
         }
         URLConnection c = url.openConnection();
-        if (!(c instanceof HttpsURLConnection)) {
+        HttpURLConnection connection = null;
+        if (!(c instanceof HttpsURLConnection) && !isDebugModeEnabled()) {
             throw new IOException("opened connection is not an HttpsURLConnection.");
+        } else if (isDebugModeEnabled()) {
+            connection = (HttpURLConnection) c;
+        } else {
+            connection = (HttpsURLConnection) c;
         }
-        HttpsURLConnection connection = (HttpsURLConnection) c;
         try {
             connection.setRequestMethod("GET");
         } catch (ProtocolException e) {
