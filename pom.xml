@@ -6,7 +6,7 @@
 
 	<groupId>de.xxschrandxx.wsc</groupId>
 	<artifactId>wscbridge</artifactId>
-	<version>2.0.4</version>
+	<version>2.0.5</version>
 
 	<name>WSC-Minecraft-Bridge</name>
 	<url>https://github.com/xXSchrandXx/WSC-Minecraft-Bridge</url>
@@ -30,14 +30,14 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.20.1-R0.1-SNAPSHOT</version>
+			<version>1.21.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bungee Dep -->
 		<dependency>
 			<groupId>net.md-5</groupId>
 			<artifactId>bungeecord-api</artifactId>
-			<version>1.20-R0.1</version>
+			<version>1.21-R0.3-SNAPSHOT</version>
 		</dependency>
 		<!-- bStats -->
 		<dependency>
@@ -130,55 +130,8 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>wagon-maven-plugin</artifactId>
-				<version>2.0.2</version>
-				<executions>
-					<execution>
-						<id>upload-javadoc</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>upload</goal>
-						</goals>
-						<configuration>
-							<serverId>gamestrikeNew</serverId>
-							<fromDir>${project.build.directory}</fromDir>
-							<includes>apidocs/**, ${project.artifactId}-${project.version}.jar</includes>
-							<excludes>*javadoc.jar,*shaded.jar</excludes>
-							<url>ftp://maven.gamestrike.de/docs</url>
-							<toDir>${project.artifactId}/${project.version}</toDir>
-							<optimize>false</optimize>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>3.0.0-M1</version>
-			</plugin>
-
 		</plugins>
-
-		<extensions>
-			<!-- Enabling the use of FTP -->
-			<extension>
-			  <groupId>org.apache.maven.wagon</groupId>
-			   <artifactId>wagon-ftp</artifactId>
-			   <version>1.0</version>
-			</extension>
-		  </extensions>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>gamestrikeNew</id>
-			<name>Gamestrike.de</name>
-			<url>ftp://maven.gamestrike.de/mvn/</url>
-		</repository>
-	</distributionManagement>
 
 	<issueManagement>
 		<system>Issues</system>

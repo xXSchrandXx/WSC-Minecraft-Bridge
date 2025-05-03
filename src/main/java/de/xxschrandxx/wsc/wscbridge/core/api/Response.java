@@ -1,6 +1,5 @@
 package de.xxschrandxx.wsc.wscbridge.core.api;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,11 @@ import com.google.gson.reflect.TypeToken;
 
 public class Response<K ,V> {
 
-    public final Type type = new TypeToken<HashMap<K, V>>(){}.getType();
+    static <K, V> TypeToken<?> getTypeToken() {
+        Class<K> Kclass = (Class<K>) Object.class;
+        Class<V> Vclass = (Class<V>) Object.class;
+        return TypeToken.getParameterized(HashMap.class, Kclass, Vclass);
+    }
 
     protected final Gson gson = new Gson();
 
@@ -33,7 +36,7 @@ public class Response<K ,V> {
             return;
         }
         try {
-            this.response = this.gson.fromJson(body, this.type);
+            this.response = this.gson.fromJson(body, getTypeToken().getType());
         }
         catch (OutOfMemoryError | JsonSyntaxException e) {
         }
@@ -49,10 +52,6 @@ public class Response<K ,V> {
 
     public String getMessage() {
         return this.message;
-    }
-
-    public Type getTypeOfResponse() {
-        return this.type;
     }
 
     public HashMap<K, V> getResponse() {
