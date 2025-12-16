@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class Response<K ,V> {
 
+    @SuppressWarnings("unchecked")
     static <K, V> TypeToken<?> getTypeToken() {
         Class<K> Kclass = (Class<K>) Object.class;
         Class<V> Vclass = (Class<V>) Object.class;
