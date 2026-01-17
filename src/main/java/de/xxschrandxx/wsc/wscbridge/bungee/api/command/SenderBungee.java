@@ -2,7 +2,7 @@ package de.xxschrandxx.wsc.wscbridge.bungee.api.command;
 
 import java.util.UUID;
 
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -14,10 +14,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class SenderBungee implements ISender<CommandSender> {
 
-    protected final IMinecraftBridgePlugin<?> instance;
+    protected final IBridgePlugin<?> instance;
     protected final CommandSender sender;
 
-    public SenderBungee(CommandSender sender, IMinecraftBridgePlugin<?> instance) {
+    public SenderBungee(CommandSender sender, IBridgePlugin<?> instance) {
         this.sender = sender;
         this.instance = instance;
     }

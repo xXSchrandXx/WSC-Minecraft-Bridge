@@ -15,15 +15,16 @@ import de.xxschrandxx.wsc.wscbridge.bukkit.api.command.SenderBukkit;
 import de.xxschrandxx.wsc.wscbridge.bukkit.api.event.*;
 import de.xxschrandxx.wsc.wscbridge.bukkit.commands.WSCBridgeBukkit;
 import de.xxschrandxx.wsc.wscbridge.bukkit.listener.WSCBridgeCommandAliasBukkit;
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
-import de.xxschrandxx.wsc.wscbridge.core.MinecraftBridgeVars;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.BridgeVars;
+import de.xxschrandxx.wsc.wscbridge.core.api.MinecraftBridgeLogger;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
-public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridgePlugin<MinecraftBridgeBukkitAPI> {
+public class MinecraftBridgeBukkit extends JavaPlugin implements IBridgePlugin<MinecraftBridgeBukkitAPI> {
 
     // start of api part
     public String getInfo() {
-        String rawMessage = getConfiguration().getString(MinecraftBridgeVars.Configuration.LangCmdInfoInfo);
+        String rawMessage = getConfiguration().getString(BridgeVars.Configuration.LangCmdInfoInfo);
         String message = rawMessage
             .replaceAll("%server%", instance.getServer().getName())
             .replaceAll("%serverversion%", instance.getServer().getVersion())
@@ -39,12 +40,19 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
 
     private MinecraftBridgeBukkitAPI api;
 
+    private MinecraftBridgeLogger bridgeLogger;
+
+    @Override
+    public MinecraftBridgeLogger getBridgeLogger() {
+        return bridgeLogger;
+    }
+
     public void loadAPI(ISender<?> sender) {
         this.api = new MinecraftBridgeBukkitAPI(
-            getConfiguration().getString(MinecraftBridgeVars.Configuration.User),
-            getConfiguration().getString(MinecraftBridgeVars.Configuration.Password),
-            getLogger(),
-            getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.Debug)
+            getConfiguration().getString(BridgeVars.Configuration.User),
+            getConfiguration().getString(BridgeVars.Configuration.Password),
+            getBridgeLogger(),
+            getConfiguration().getBoolean(BridgeVars.Configuration.Debug)
         );
         getServer().getPluginManager().callEvent(new WSCBridgePluginReloadEventBukkit(sender));
     }
@@ -57,6 +65,7 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
     @Override
     public void onEnable() {
         instance = this;
+        bridgeLogger = new MinecraftBridgeLogger(getLogger());
 
         // Load configuration
         getLogger().log(Level.INFO, "Loading Configuration.");
@@ -113,7 +122,7 @@ public class MinecraftBridgeBukkit extends JavaPlugin implements IMinecraftBridg
     public boolean reloadConfiguration(ISender<?> sender) {
         reloadConfig();
 
-        if (MinecraftBridgeVars.startConfig(getConfiguration(), getLogger())) {
+        if (BridgeVars.startConfig(getConfiguration(), getBridgeLogger())) {
             if (!saveConfiguration()) {
                 return false;
             }

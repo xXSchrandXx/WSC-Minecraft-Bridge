@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import de.xxschrandxx.wsc.wscbridge.bungee.MinecraftBridgeBungee;
 import de.xxschrandxx.wsc.wscbridge.bungee.api.command.SenderBungee;
-import de.xxschrandxx.wsc.wscbridge.core.MinecraftBridgeVars;
+import de.xxschrandxx.wsc.wscbridge.core.BridgeVars;
 import de.xxschrandxx.wsc.wscbridge.core.commands.WSCBridge;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -16,7 +16,7 @@ public class WSCBridgeCommandAliasBungee implements Listener {
     @EventHandler
     public void onCommand(ChatEvent event) {
         MinecraftBridgeBungee instance = MinecraftBridgeBungee.getInstance();
-        if (!instance.getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.cmdAliasEnabled)) {
+        if (!instance.getConfiguration().getBoolean(BridgeVars.Configuration.cmdAliasEnabled)) {
             return;
         }
 
@@ -26,7 +26,7 @@ public class WSCBridgeCommandAliasBungee implements Listener {
 
         String[] split = event.getMessage().split(" ");
         String command = split[0].replaceFirst("/", "");
-        if (!instance.getConfiguration().getStringList(MinecraftBridgeVars.Configuration.cmdAliases).contains(command.toLowerCase())) {
+        if (!instance.getConfiguration().getStringList(BridgeVars.Configuration.cmdAliases).contains(command.toLowerCase())) {
             return;
         }
         String[] args = {};

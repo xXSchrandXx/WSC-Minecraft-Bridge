@@ -2,7 +2,7 @@ package de.xxschrandxx.wsc.wscbridge.bukkit.api.command;
 
 import org.bukkit.command.CommandSender;
 
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -11,7 +11,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class SenderSpigot extends SenderBukkit {
 
-    public SenderSpigot(CommandSender sender, IMinecraftBridgePlugin<?> instance) {
+    public SenderSpigot(CommandSender sender, IBridgePlugin<?> instance) {
         super(sender, instance);
     }
 

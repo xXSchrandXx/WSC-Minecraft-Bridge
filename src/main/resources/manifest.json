@@ -1,0 +1,14 @@
+{
+  "Group": "WSC-Hytale",
+  "Name": "WSC-Hytale-Bridge",
+  "Version": "${project.version}",
+  "Description": "WSC-Hytale-Bridge",
+  "Authors": [{"Name": "xXSchrandXx"}],
+  "Website": "https://github.com/xXSchrandXx/WSC-Minecraft-Bridge",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "${project.groupId}.${project.artifactId}.hytale.HytaleBridge",
+  "IncludesAssetPack": false
+}

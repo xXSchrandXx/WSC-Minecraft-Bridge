@@ -1,11 +1,11 @@
 package de.xxschrandxx.wsc.wscbridge.core.api.configuration;
 
 import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import de.xxschrandxx.wsc.wscbridge.core.api.IBridgeLogger;
 
 public abstract class AbstractConfiguration {
-    public static boolean startConfig(IConfiguration<?> configuration, Class<?> configClass, Class<?> defaultClass, Logger logger) {
+    public static boolean startConfig(IConfiguration<?> configuration, Class<?> configClass, Class<?> defaultClass, IBridgeLogger logger) {
         boolean error = false;
         for (Field constant : configClass.getDeclaredFields()) {
             try {
@@ -31,9 +31,9 @@ public abstract class AbstractConfiguration {
         return error;
     }
 
-    public static boolean checkConfiguration(IConfiguration<?> configuration, String path, Object def, Logger logger) {
+    public static boolean checkConfiguration(IConfiguration<?> configuration, String path, Object def, IBridgeLogger logger) {
         if (configuration.get(path) == null) {
-            logger.log(Level.WARNING, path + " is not set. Resetting it.");
+            logger.warn(path + " is not set. Resetting it.");
             configuration.set(path, def);
             return true;
         }

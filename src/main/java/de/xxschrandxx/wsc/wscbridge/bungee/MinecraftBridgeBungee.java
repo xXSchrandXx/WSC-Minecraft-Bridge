@@ -16,18 +16,19 @@ import de.xxschrandxx.wsc.wscbridge.bungee.api.command.SenderBungee;
 import de.xxschrandxx.wsc.wscbridge.bungee.api.event.*;
 import de.xxschrandxx.wsc.wscbridge.bungee.commands.WSCBridgeBungee;
 import de.xxschrandxx.wsc.wscbridge.bungee.listener.WSCBridgeCommandAliasBungee;
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
-import de.xxschrandxx.wsc.wscbridge.core.MinecraftBridgeVars;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.BridgeVars;
+import de.xxschrandxx.wsc.wscbridge.core.api.MinecraftBridgeLogger;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
-public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlugin<MinecraftBridgeBungeeAPI> {
+public class MinecraftBridgeBungee extends Plugin implements IBridgePlugin<MinecraftBridgeBungeeAPI> {
 
     // start of api part
     public String getInfo() {
-        String rawMessage = getConfiguration().getString(MinecraftBridgeVars.Configuration.LangCmdInfoInfo);
+        String rawMessage = getConfiguration().getString(BridgeVars.Configuration.LangCmdInfoInfo);
         String message = rawMessage
             .replaceAll("%server%", instance.getProxy().getName())
             .replaceAll("%serverversion%", instance.getProxy().getVersion())
@@ -43,12 +44,19 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
 
     private MinecraftBridgeBungeeAPI api;
 
+    private MinecraftBridgeLogger bridgeLogger;
+
+    @Override
+    public MinecraftBridgeLogger getBridgeLogger() {
+        return bridgeLogger;
+    }
+
     public void loadAPI(ISender<?> sender) {
         api = new MinecraftBridgeBungeeAPI(
-            getConfiguration().getString(MinecraftBridgeVars.Configuration.User),
-            getConfiguration().getString(MinecraftBridgeVars.Configuration.Password),
-            getLogger(),
-            getConfiguration().getBoolean(MinecraftBridgeVars.Configuration.Debug)
+            getConfiguration().getString(BridgeVars.Configuration.User),
+            getConfiguration().getString(BridgeVars.Configuration.Password),
+            getBridgeLogger(),
+            getConfiguration().getBoolean(BridgeVars.Configuration.Debug)
         );
         getProxy().getPluginManager().callEvent(new WSCBridgePluginReloadEventBungee(sender));
     }
@@ -62,6 +70,7 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
     @Override
     public void onEnable() {
         instance = this;
+        bridgeLogger = new MinecraftBridgeLogger(getLogger());
 
         // Load configuration
         getLogger().log(Level.INFO, "Loading Configuration.");
@@ -142,7 +151,7 @@ public class MinecraftBridgeBungee extends Plugin implements IMinecraftBridgePlu
             config = new ConfigurationBungee();
         }
 
-        if (MinecraftBridgeVars.startConfig(getConfiguration(), getLogger())) {
+        if (BridgeVars.startConfig(getConfiguration(), getBridgeLogger())) {
             if (!saveConfiguration()) {
                 return false;
             }

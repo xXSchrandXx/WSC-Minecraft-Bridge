@@ -16,24 +16,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
 
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
-public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI {
+public abstract class BridgeCoreAPI implements IBridgeCoreAPI {
 
     protected final String auth;
     public String getAuth() {
         return this.auth;
     }
 
-    protected final Logger logger;
+    protected final IBridgeLogger logger;
 
     protected final Boolean debug;
     public Boolean isDebugModeEnabled() {
@@ -49,7 +47,7 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
      * @param logger Logger to log information
      * @param debug Weather debug mode is enabled
      */
-    public MinecraftBridgeCoreAPI(String user, String password, Logger logger, Boolean debug) {
+    public BridgeCoreAPI(String user, String password, IBridgeLogger logger, Boolean debug) {
         this(new String(Base64.getEncoder().encode((user + ":" + password).getBytes())), logger, debug);
     }
 
@@ -59,7 +57,7 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
      * @param logger Logger to log information
      * @param debug Weather debug mode is enabled
      */
-    public MinecraftBridgeCoreAPI(String auth, Logger logger, Boolean debug) {
+    public BridgeCoreAPI(String auth, IBridgeLogger logger, Boolean debug) {
        this.auth = auth;
        this.logger = logger;
        this.debug = debug;
@@ -70,7 +68,7 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
      * @param api
      * @param logger
      */
-    public MinecraftBridgeCoreAPI(MinecraftBridgeCoreAPI api, Logger logger) {
+    public BridgeCoreAPI(BridgeCoreAPI api, IBridgeLogger logger) {
         this(api.getAuth(), logger, api.isDebugModeEnabled());
     }
 
@@ -80,18 +78,18 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
 
     public void log(String message, Exception exception) {
         if (exception == null) {
-            this.logger.log(Level.INFO, "[Debug] " + message);
+            this.logger.info("[Debug] " + message);
         }
         else {
-            this.logger.log(Level.INFO, "[Debug] " + message, exception);
+            this.logger.warn("[Debug] " + message, exception);
         }
     }
 
-    public abstract ISender<?> getSender(UUID uuid, IMinecraftBridgePlugin<?> instance);
+    public abstract ISender<?> getSender(UUID uuid, IBridgePlugin<?> instance);
 
-    public abstract ISender<?> getSender(String name, IMinecraftBridgePlugin<?> instance);
+    public abstract ISender<?> getSender(String name, IBridgePlugin<?> instance);
 
-    public abstract ArrayList<ISender<?>> getOnlineSender(IMinecraftBridgePlugin<?> instance);
+    public abstract ArrayList<ISender<?>> getOnlineSender(IBridgePlugin<?> instance);
 
     public Response<String, Object> requestObject(URL url, HashMap<String, Object> postData) throws MalformedURLException, SocketTimeoutException, IOException {
         String postString = this.gson.toJson(postData);
@@ -145,7 +143,7 @@ public abstract class MinecraftBridgeCoreAPI implements IMinecraftBridgeCoreAPI 
         connection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
         if (isDebugModeEnabled()) {
             this.log("Request-Header: " + connection.getRequestProperties().toString());
-            this.log("Request-Body: " + postData);
+            this.log("Request-Body: " + connection.getRequestMethod() + " " + postData);
         }
         connection.setDoOutput(true);
         connection.setDoInput(true);

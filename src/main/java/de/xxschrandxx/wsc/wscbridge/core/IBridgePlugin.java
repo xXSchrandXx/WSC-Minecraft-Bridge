@@ -1,13 +1,12 @@
 package de.xxschrandxx.wsc.wscbridge.core;
 
-import java.util.logging.Logger;
-
-import de.xxschrandxx.wsc.wscbridge.core.api.MinecraftBridgeCoreAPI;
+import de.xxschrandxx.wsc.wscbridge.core.api.BridgeCoreAPI;
+import de.xxschrandxx.wsc.wscbridge.core.api.IBridgeLogger;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.IConfiguration;
 
-public interface IMinecraftBridgePlugin<T extends MinecraftBridgeCoreAPI> {
-    public static IMinecraftBridgePlugin<?> getInstance() {
+public interface IBridgePlugin<T extends BridgeCoreAPI> {
+    public static IBridgePlugin<?> getInstance() {
         return null;
     }
     public void loadAPI(ISender<?> sender);
@@ -15,6 +14,6 @@ public interface IMinecraftBridgePlugin<T extends MinecraftBridgeCoreAPI> {
     public boolean reloadConfiguration(ISender<?> sender);
     public boolean saveConfiguration();
     public IConfiguration<?> getConfiguration();
-    public Logger getLogger();
+    public IBridgeLogger getBridgeLogger();
     public String getInfo();
 }

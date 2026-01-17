@@ -6,14 +6,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xxschrandxx.wsc.wscbridge.core.IMinecraftBridgePlugin;
+import de.xxschrandxx.wsc.wscbridge.core.IBridgePlugin;
 import de.xxschrandxx.wsc.wscbridge.core.api.command.ISender;
 
 public class SenderBukkit implements ISender<CommandSender> {
 
-    protected final IMinecraftBridgePlugin<?> instance;
+    protected final IBridgePlugin<?> instance;
     protected final CommandSender sender;
-    public SenderBukkit(CommandSender sender, IMinecraftBridgePlugin<?> instance) {
+    public SenderBukkit(CommandSender sender, IBridgePlugin<?> instance) {
         this.sender = sender;
         this.instance = instance;
     }

@@ -1,13 +1,13 @@
 package de.xxschrandxx.wsc.wscbridge.core;
 
 import java.util.List;
-import java.util.logging.Logger;
 
+import de.xxschrandxx.wsc.wscbridge.core.api.IBridgeLogger;
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.AbstractConfiguration;
 import de.xxschrandxx.wsc.wscbridge.core.api.configuration.IConfiguration;
 
-public class MinecraftBridgeVars extends AbstractConfiguration {
-    public static boolean startConfig(IConfiguration<?> configuration, Logger logger) {
+public class BridgeVars extends AbstractConfiguration {
+    public static boolean startConfig(IConfiguration<?> configuration, IBridgeLogger logger) {
         return startConfig(configuration, Configuration.class, defaults.class, logger);
     }
 
@@ -54,8 +54,6 @@ public class MinecraftBridgeVars extends AbstractConfiguration {
         // universal
         // debug
         public static final Boolean Debug = false;
-        // id
-        public static final Integer ID = 0;
         // user
         public static final String User = "user";
         // password
