@@ -6,7 +6,7 @@
 
 	<groupId>de.xxschrandxx.wsc</groupId>
 	<artifactId>wscbridge</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 
 	<name>WSC-Bridge</name>
 	<url>https://github.com/xXSchrandXx/WSC-Bridge</url>
@@ -44,6 +44,12 @@
 			<artifactId>bungeecord-api</artifactId>
 			<version>1.21-R0.3-SNAPSHOT</version>
 		</dependency>
+		<!-- Hytale -->
+		<dependency>
+			<groupId>com.hypixel.hytale</groupId>
+			<artifactId>HytaleServer</artifactId>
+			<version>2026.01.13-dcad8778f-20260115.201811-1</version>
+		</dependency>
 		<!-- bStats -->
 		<dependency>
 			<groupId>org.bstats</groupId>
@@ -56,12 +62,6 @@
 			<artifactId>bstats-bungeecord</artifactId>
 			<version>3.0.2</version>
 			<scope>compile</scope>
-		</dependency>
-		<!-- Hytale -->
-		<dependency>
-			<groupId>com.hypixel.hytale</groupId>
-			<artifactId>HytaleServer</artifactId>
-			<version>2026.01.13-dcad8778f-20260115.201811-1</version>
 		</dependency>
 	</dependencies>
 
