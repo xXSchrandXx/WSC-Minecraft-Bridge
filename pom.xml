@@ -23,10 +23,10 @@
 			<id>spigot-bungee-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
-		<!-- Hytale Repo-->
+		<!-- Hytale Repo -->
 		<repository>
-			<id>hytale-temp</id>
-			<url>https://nexus.lucko.me/repository/maven-hytale/</url>
+			<id>hytale-repo</id>
+			<url>https://maven.hytale.com/release</url>
 		</repository>
 	</repositories>
 
@@ -47,8 +47,8 @@
 		<!-- Hytale -->
 		<dependency>
 			<groupId>com.hypixel.hytale</groupId>
-			<artifactId>HytaleServer</artifactId>
-			<version>2026.01.13-dcad8778f-20260115.201811-1</version>
+			<artifactId>Server</artifactId>
+			<version>2026.01.24-6e2d4fc36</version>
 		</dependency>
 		<!-- bStats -->
 		<dependency>
